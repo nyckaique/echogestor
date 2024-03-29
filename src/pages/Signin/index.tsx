@@ -3,6 +3,7 @@ import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import "./signin.css";
 import { AuthContext } from "../../contexts/auth";
+import echocrmlogo from "../../assets/echocrmlogo.png";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -17,7 +18,10 @@ export default function SignIn() {
   }
   return (
     <div className="container">
-      <p className="titulo">ECHO CRM</p>
+      <p className="titulo align-center">
+        {" "}
+        <img src={echocrmlogo} alt="Echo CRM Logo" className="logo" /> ECHO CRM
+      </p>
       <div className="box">
         <TextField
           className="input"

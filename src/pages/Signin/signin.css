@@ -26,3 +26,13 @@
   font-size: 4em;
   color: #52648b;
 }
+.logo {
+  width: 50px;
+  height: auto;
+}
+.align-center {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 50%;
+}
