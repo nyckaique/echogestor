@@ -43,7 +43,7 @@ function AuthProvider({ children }: any) {
         setUser(data);
         storageUser(data);
         setLoadingAuth(false);
-        navigate("/dashboard");
+        navigate("/home");
       })
       .catch((error) => {
         console.log(error);
@@ -70,7 +70,7 @@ function AuthProvider({ children }: any) {
           setUser(data);
           storageUser(data);
           setLoadingAuth(false);
-          navigate("/dashboard");
+          navigate("/home");
         });
       })
       .catch((error) => {
@@ -92,11 +92,13 @@ function AuthProvider({ children }: any) {
       value={{
         signed: !!user,
         user,
+        setUser,
         signin,
         signup,
         logout,
         loadingAuth,
         loading,
+        storageUser,
       }}
     >
       {children}

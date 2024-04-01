@@ -1,0 +1,54 @@
+.fotoPerfil {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.labelAvatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 250px;
+  flex-direction: column;
+  cursor: pointer;
+}
+.labelAvatar input {
+  display: none;
+}
+.labelAvatar span {
+  z-index: 99;
+  position: absolute;
+  opacity: 0;
+  transition: all ease-in-out 0.3s;
+}
+.labelAvatar:hover span {
+  transform: scale(2);
+  opacity: 1;
+}
+.formProfile {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  margin: auto;
+  gap: 0.5em;
+}
+.formProfile input,
+button {
+  max-width: 250px;
+}
+.formProfile input {
+  line-height: 2;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  border: none;
+  background-color: #d4d0d5;
+  color: #383b47;
+}
+.formProfile input:focus {
+  outline: 2px solid #383b47;
+}
+.formProfile input:disabled {
+  cursor: not-allowed;
+}

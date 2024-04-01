@@ -1,8 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import SignIn from "../pages/Signin";
 import SignUp from "../pages/Signup";
-import Dashboard from "../pages/Dashboard";
+import Home from "../pages/Home";
 import Private from "./Private";
+import Profile from "../pages/Profile";
 
 export default function RoutesApp() {
   return (
@@ -10,10 +11,18 @@ export default function RoutesApp() {
       <Route path="/" element={<SignIn />} />
       <Route path="/cadastro" element={<SignUp />} />
       <Route
-        path="/dashboard"
+        path="/home"
         element={
           <Private>
-            <Dashboard />
+            <Home />
+          </Private>
+        }
+      />
+      <Route
+        path="/perfil"
+        element={
+          <Private>
+            <Profile />
           </Private>
         }
       />

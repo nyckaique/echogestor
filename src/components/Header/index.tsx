@@ -44,7 +44,7 @@ const navItems = [
   "Faturamento",
 ];
 const navLinks = [
-  "dashboard",
+  "home",
   "perfil",
   "clientes",
   "agenda",
