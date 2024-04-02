@@ -1,0 +1,29 @@
+.cliente {
+  background-color: #d4d0d5;
+  min-width: 250px;
+  width: 300px;
+  max-width: 90vw;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+.btn {
+  border: none;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  background-color: #52648b;
+  color: #d4d0d5;
+  transition: all ease-in-out 0.3s;
+}
+.btn:hover {
+  background-color: #83e4ff;
+  color: #52648b;
+}
+
+.icon {
+  vertical-align: middle;
+}
