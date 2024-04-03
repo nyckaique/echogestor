@@ -19,19 +19,71 @@
 .formCliente label {
   margin-right: 0.5em;
 }
-.formCliente input,
-button {
+.formCliente button,
+.inputText {
   max-width: 250px;
 }
-.formCliente input {
+.inputText {
   line-height: 2;
   padding: 0.5em;
   border-radius: 0.5em;
   border: none;
   background-color: #d4d0d5;
   color: #383b47;
-  margin-right: 2em;
+  margin-right: 0.5em;
 }
-.formCliente input:focus {
+.inputText:focus {
   outline: 2px solid #383b47;
+}
+.formCliente div {
+  margin-right: 1.5em;
+}
+.formCliente div:last-child {
+  display: flex;
+  gap: 1em;
+}
+.btn {
+  border: none;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  background-color: #52648b;
+  color: #d4d0d5;
+  transition: all ease-in-out 0.3s;
+  vertical-align: middle;
+}
+.btn:hover {
+  background-color: #83e4ff;
+  color: #52648b;
+}
+table {
+  width: 80%;
+  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 0.5em;
+  overflow: hidden;
+  border-collapse: collapse;
+  margin-bottom: 2em;
+}
+thead {
+  background-color: #d4d0d5;
+  width: 100%;
+}
+tbody {
+}
+th,
+td {
+  padding: 8px 10px;
+  text-wrap: nowrap;
+}
+td:first-child {
+  text-wrap: wrap;
+}
+th,
+tr:not(:last-child) {
+  border-bottom: 1px solid #383b47;
+}
+td {
+  font-size: 0.8em;
+}
+.tdCenter {
+  text-align: center;
 }

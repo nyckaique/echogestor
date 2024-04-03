@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { useState, useContext, useEffect } from "react";
 import Header from "../../components/Header";
 import Title from "../../components/Title";
@@ -9,48 +10,36 @@ import { db } from "../../services/firebaseConnection";
 import {
   addDoc,
   collection,
-  getDocs,
   doc,
   where,
   updateDoc,
   deleteDoc,
+  onSnapshot,
 } from "firebase/firestore";
 
 import { AuthContext } from "../../contexts/auth";
 import Cliente from "../../components/Cliente";
-import { useNavigate } from "react-router-dom";
+import apiCEP from "../../services/cep";
+import SearchIcon from "@mui/icons-material/Search";
+
 const listRef = collection(db, "clientes");
 
 export default function Clientes() {
   const [nome, setNome] = useState("");
   const [endereco, setEndereco] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
+  const [numero, setNumero] = useState("");
   const [telefone, setTelefone] = useState("");
   const [clientes, setClientes] = useState([]);
   const [estaAtualizando, setEstaAtualizando] = useState(false);
   const [index, setIndex] = useState("");
-  const navigate = useNavigate();
+  const [inputCEP, setInputCEP] = useState("");
+  const [cep, setCEP] = useState({});
+  const [clientesFiltrados, setClientesFiltrados] = useState([]);
+  const [filtro, setFiltro] = useState("");
   const { user } = useContext(AuthContext);
-
-  function editCliente(index) {
-    setEstaAtualizando(true);
-    setIndex(index);
-    setNome(clientes[index].nomeCliente);
-    setEndereco(clientes[index].endereco);
-    setTelefone(clientes[index].telefone);
-  }
-  async function deleteCliente(index) {
-    const docRef = doc(db, "clientes", clientes[index].id);
-    await deleteDoc(docRef)
-      .then(() => {
-        alert("Deletado com sucesso!");
-
-        navigate(0);
-      })
-      .catch((error) => {
-        alert("Não foi possível deletar!");
-        navigate(0);
-      });
-  }
 
   useEffect(() => {
     function ordenar(a, b) {
@@ -63,47 +52,119 @@ export default function Clientes() {
       return 0;
     }
     async function loadClientes() {
-      const querySnapshot = await getDocs(
-        listRef,
-        where("user", "==", user.uid)
-      )
-        .then((snapshot) => {
-          let lista = [];
-
-          snapshot.forEach((doc) => {
-            lista.push({
-              id: doc.id,
-              nomeCliente: doc.data().nomeCliente,
-              telefone: doc.data().telefone,
-              endereco: doc.data().endereco,
-            });
+      onSnapshot(listRef, where("user", "==", user.uid), (snapshot) => {
+        let lista = [];
+        snapshot.forEach((doc) => {
+          lista.push({
+            id: doc.id,
+            nomeCliente: doc.data().nomeCliente,
+            cep: doc.data().cep,
+            endereco: doc.data().endereco,
+            numero: doc.data().numero,
+            bairro: doc.data().bairro,
+            cidade: doc.data().cidade,
+            estado: doc.data().estado,
+            telefone: doc.data().telefone,
           });
-
-          lista.sort(ordenar);
-
-          if (snapshot.docs.size === 0) {
-            alert("Não tem clientes cadastrados");
-            return;
-          }
-          setClientes(lista);
-        })
-        .catch((error) => {
-          alert("Não foi possível buscar clientes");
-          console.log(error);
         });
+        lista.sort(ordenar);
+        setClientes(lista);
+      });
     }
     loadClientes();
   }, []);
 
+  function filtrar(e) {
+    setFiltro(e.target.value);
+
+    const valor = filtro
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    const filtrado = clientes.filter((cliente) =>
+      cliente.nomeCliente
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .includes(valor)
+    );
+    setClientesFiltrados(filtrado);
+  }
+
+  function editCliente(index) {
+    setEstaAtualizando(true);
+    setIndex(index);
+    setNome(clientes[index].nomeCliente);
+    setInputCEP(clientes[index].cep);
+    setEndereco(clientes[index].endereco);
+    setNumero(clientes[index].numero);
+    setBairro(clientes[index].bairro);
+    setCidade(clientes[index].cidade);
+    setEstado(clientes[index].estado);
+    setTelefone(clientes[index].telefone);
+  }
+
+  async function deleteCliente(index) {
+    const vaiDeletar = confirm(
+      `Confirma deletar o cliente ${clientes[index].nomeCliente}?`
+    );
+    if (vaiDeletar) {
+      const docRef = doc(db, "clientes", clientes[index].id);
+      await deleteDoc(docRef)
+        .then(() => {
+          alert("Deletado com sucesso!");
+        })
+        .catch((error) => {
+          alert("Não foi possível deletar!");
+        });
+    }
+  }
+
+  async function getCEP(e) {
+    e.preventDefault();
+    if (inputCEP === "") {
+      alert("Por favor, preencha o CEP!");
+      return;
+    }
+
+    try {
+      const response = await apiCEP.get(`${inputCEP}/json`);
+      setCEP(response.data);
+      console.log(response.data);
+      setBairro(response.data.bairro);
+      setCidade(response.data.localidade);
+      setEstado(response.data.uf);
+      setEndereco(response.data.logradouro);
+    } catch {
+      alert("Deu um erro na busca!");
+      setInputCEP("");
+    }
+  }
+
   async function formSubmit() {
-    if (estaAtualizando) {
-      if (nome !== "" && endereco !== "" && telefone !== "") {
+    if (
+      nome !== "" &&
+      inputCEP !== "" &&
+      endereco !== "" &&
+      numero !== "" &&
+      bairro !== "" &&
+      cidade !== "" &&
+      estado !== "" &&
+      telefone !== ""
+    ) {
+      if (estaAtualizando) {
         let novoNome = nome.charAt(0).toUpperCase() + nome.slice(1);
         let novoEndereco = endereco.charAt(0).toUpperCase() + endereco.slice(1);
+        let novaCidade = cidade.charAt(0).toUpperCase() + cidade.slice(1);
         const docRef = doc(db, "clientes", clientes[index].id);
         await updateDoc(docRef, {
           nomeCliente: novoNome,
+          cep: inputCEP,
           endereco: novoEndereco,
+          numero: numero,
+          bairro: bairro,
+          cidade: novaCidade,
+          estado: estado,
           telefone: telefone,
         })
           .then(() => {
@@ -111,35 +172,50 @@ export default function Clientes() {
             setIndex("");
             setEstaAtualizando(false);
             setNome("");
+            setInputCEP("");
             setEndereco("");
+            setNumero("");
+            setBairro("");
+            setCidade("");
+            setEstado("");
             setTelefone("");
-            navigate(0);
           })
           .catch((error) => {
             alert("Não foi possível atualizar dados");
             setIndex("");
             setEstaAtualizando(false);
             setNome("");
+            setInputCEP("");
             setEndereco("");
+            setNumero("");
+            setBairro("");
+            setCidade("");
+            setEstado("");
             setTelefone("");
-            navigate(0);
           });
       } else {
-        alert("Preencha todos os campos!");
-      }
-    } else {
-      if (nome !== "" && endereco !== "" && telefone !== "") {
         let novoNome = nome.charAt(0).toUpperCase() + nome.slice(1);
         let novoEndereco = endereco.charAt(0).toUpperCase() + endereco.slice(1);
+        let novaCidade = cidade.charAt(0).toUpperCase() + cidade.slice(1);
         await addDoc(collection(db, "clientes"), {
           nomeCliente: novoNome,
+          cep: inputCEP,
           endereco: novoEndereco,
+          numero: numero,
+          bairro: bairro,
+          cidade: novaCidade,
+          estado: estado,
           telefone: telefone,
           user: user.uid,
         })
           .then(() => {
             setNome("");
+            setInputCEP("");
             setEndereco("");
+            setNumero("");
+            setBairro("");
+            setCidade("");
+            setEstado("");
             setTelefone("");
             alert("Cadastrado novo cliente com sucesso!");
           })
@@ -147,12 +223,23 @@ export default function Clientes() {
             alert("Não foi possível realizar o cadastro no momento");
             console.log(error);
           });
-      } else {
-        alert("Preencha todos os campos!");
       }
+    } else {
+      alert("Preencha todos os campos!");
     }
   }
-
+  function limpar() {
+    setEstaAtualizando(false);
+    setIndex("");
+    setNome("");
+    setInputCEP("");
+    setEndereco("");
+    setNumero("");
+    setBairro("");
+    setCidade("");
+    setEstado("");
+    setTelefone("");
+  }
   return (
     <div>
       <Header />
@@ -164,6 +251,7 @@ export default function Clientes() {
         <div>
           <label>Nome</label>
           <input
+            className="inputText"
             type="text"
             value={nome}
             placeholder="Nome Sobrenome"
@@ -173,8 +261,24 @@ export default function Clientes() {
           />
         </div>
         <div>
+          <label>CEP</label>
+          <input
+            className="inputText"
+            type="text"
+            value={inputCEP}
+            placeholder="75500123"
+            onChange={(e) => {
+              setInputCEP(e.target.value);
+            }}
+          />
+          <button onClick={getCEP} className="btn">
+            <SearchIcon fontSize="small" />
+          </button>
+        </div>
+        <div>
           <label>Endereço</label>
           <input
+            className="inputText"
             type="text"
             value={endereco}
             placeholder="Rua 1, nº1, Cidade"
@@ -184,8 +288,57 @@ export default function Clientes() {
           />
         </div>
         <div>
+          <label>Número</label>
+          <input
+            className="inputText"
+            type="text"
+            value={numero}
+            placeholder="123"
+            onChange={(e) => {
+              setNumero(e.target.value);
+            }}
+          />
+        </div>
+        <div>
+          <label>Bairro</label>
+          <input
+            className="inputText"
+            type="text"
+            value={bairro}
+            placeholder="bairro"
+            onChange={(e) => {
+              setBairro(e.target.value);
+            }}
+          />
+        </div>
+        <div>
+          <label>Cidade</label>
+          <input
+            className="inputText"
+            type="text"
+            value={cidade}
+            placeholder="cidade"
+            onChange={(e) => {
+              setCidade(e.target.value);
+            }}
+          />
+        </div>
+        <div>
+          <label>Estado</label>
+          <input
+            className="inputText"
+            type="text"
+            value={estado}
+            placeholder="GO"
+            onChange={(e) => {
+              setEstado(e.target.value);
+            }}
+          />
+        </div>
+        <div>
           <label>Telefone</label>
           <input
+            className="inputText"
             type="text"
             value={telefone}
             placeholder="(99)99999-9999"
@@ -194,25 +347,68 @@ export default function Clientes() {
             }}
           />
         </div>
-        <Button variant="contained" onClick={formSubmit}>
-          {estaAtualizando ? "Atualizar Dados" : "Novo Cliente"}
-        </Button>
+        <div>
+          <Button variant="contained" onClick={formSubmit}>
+            {estaAtualizando ? "Atualizar Dados" : "Novo Cliente"}
+          </Button>
+          <Button variant="contained" onClick={limpar}>
+            Limpar
+          </Button>
+        </div>
       </form>
+
       <div className="containerCliente">
-        {clientes.map((cliente, index) => {
-          return (
-            <div>
-              <Cliente
-                index={index}
-                nome={cliente.nomeCliente}
-                endereco={cliente.endereco}
-                telefone={cliente.telefone}
-                editCliente={editCliente}
-                deleteCliente={deleteCliente}
-              />
-            </div>
-          );
-        })}
+        <div>
+          Buscar:{" "}
+          <input
+            type="text"
+            onChange={filtrar}
+            value={filtro}
+            className="inputText"
+          />
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Telefone</th>
+              <th>Cidade</th>
+              <th>Editar</th>
+              <th>Excluir</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtro !== ""
+              ? clientesFiltrados.map((cliente, index) => {
+                  return (
+                    <Cliente
+                      key={index}
+                      index={index}
+                      nome={cliente.nomeCliente}
+                      cidade={cliente.cidade}
+                      estado={cliente.estado}
+                      telefone={cliente.telefone}
+                      editCliente={editCliente}
+                      deleteCliente={deleteCliente}
+                    />
+                  );
+                })
+              : clientes.map((cliente, index) => {
+                  return (
+                    <Cliente
+                      key={index}
+                      index={index}
+                      nome={cliente.nomeCliente}
+                      cidade={cliente.cidade}
+                      estado={cliente.estado}
+                      telefone={cliente.telefone}
+                      editCliente={editCliente}
+                      deleteCliente={deleteCliente}
+                    />
+                  );
+                })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
