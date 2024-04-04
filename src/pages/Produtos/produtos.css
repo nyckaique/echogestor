@@ -1,14 +1,14 @@
-.containerCliente {
+.containerProduto {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   align-items: center;
 }
-.formCliente {
+.formProduto {
   padding: 1em;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   margin: auto;
   gap: 0.5em;
@@ -16,10 +16,10 @@
   justify-content: center;
   flex-wrap: wrap;
 }
-.formCliente label {
+.formProduto label {
   margin-right: 0.5em;
 }
-.formCliente button,
+.formProduto button,
 .inputText {
   max-width: 250px;
 }
@@ -30,30 +30,16 @@
   border: none;
   background-color: #d4d0d5;
   color: #383b47;
-  margin-right: 0.5em;
 }
 .inputText:focus {
   outline: 2px solid #383b47;
 }
-.formCliente div {
+.formProduto div {
   margin-right: 1.5em;
 }
-.formCliente div:last-child {
+.formProduto div:last-child {
   display: flex;
-  gap: 1em;
-}
-.btn {
-  border: none;
-  border-radius: 0.5em;
-  padding: 0.5em;
-  background-color: #52648b;
-  color: #d4d0d5;
-  transition: all ease-in-out 0.3s;
-  vertical-align: middle;
-}
-.btn:hover {
-  background-color: #83e4ff;
-  color: #52648b;
+  gap: 10px;
 }
 table {
   width: 80%;

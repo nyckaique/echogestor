@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import Private from "./Private";
 import Profile from "../pages/Profile";
 import Clientes from "../pages/Clientes";
+import Produtos from "../pages/Produtos";
 
 export default function RoutesApp() {
   return (
@@ -32,6 +33,14 @@ export default function RoutesApp() {
         element={
           <Private>
             <Clientes />
+          </Private>
+        }
+      />
+      <Route
+        path="/produtos"
+        element={
+          <Private>
+            <Produtos />
           </Private>
         }
       />

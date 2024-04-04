@@ -153,9 +153,12 @@ export default function Clientes() {
       telefone !== ""
     ) {
       if (estaAtualizando) {
-        let novoNome = nome.charAt(0).toUpperCase() + nome.slice(1);
-        let novoEndereco = endereco.charAt(0).toUpperCase() + endereco.slice(1);
-        let novaCidade = cidade.charAt(0).toUpperCase() + cidade.slice(1);
+        let novoNome =
+          nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+        let novoEndereco =
+          endereco.charAt(0).toUpperCase() + endereco.slice(1).toLowerCase();
+        let novaCidade =
+          cidade.charAt(0).toUpperCase() + cidade.slice(1).toLowerCase();
         const docRef = doc(db, "clientes", clientes[index].id);
         await updateDoc(docRef, {
           nomeCliente: novoNome,
