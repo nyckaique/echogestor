@@ -65,18 +65,14 @@ export default function Produtos() {
         const docRef = doc(db, "produtos", produtos[index].id);
         await updateDoc(docRef, {
           nomeProduto: novoNomeProduto,
-          valorProduto: valorProduto,
+          valorProduto: Number(valorProduto),
         })
           .then(() => {
-            setNomeProduto("");
-            setValorProduto("");
-            setEstaAtualizando(false);
+            limpar();
             alert("Atualizado com sucesso!");
           })
           .catch((error) => {
-            setNomeProduto("");
-            setValorProduto("");
-            setEstaAtualizando(false);
+            limpar();
             alert("Não foi possível atualizar dados");
           });
       } else {
@@ -85,19 +81,15 @@ export default function Produtos() {
           nomeProduto.slice(1).toLowerCase();
         await addDoc(collection(db, "produtos"), {
           nomeProduto: novoNomeProduto,
-          valorProduto: valorProduto,
+          valorProduto: Number(valorProduto),
           user: user.uid,
         })
           .then(() => {
-            setNomeProduto("");
-            setValorProduto("");
-            setEstaAtualizando(false);
+            limpar();
             alert("Cadastrado novo produto com sucesso!");
           })
           .catch((error) => {
-            setNomeProduto("");
-            setValorProduto("");
-            setEstaAtualizando(false);
+            limpar();
             alert("Não foi possível cadastrar o produto no momento");
           });
       }

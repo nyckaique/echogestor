@@ -11,7 +11,12 @@ export default function Produto({
   return (
     <tr>
       <td>{nomeProduto}</td>
-      <td className="tdCenter">{valorProduto}</td>
+      <td className="tdCenter">
+        {valorProduto.toLocaleString("pt-br", {
+          style: "currency",
+          currency: "BRL",
+        })}
+      </td>
       <td className="tdCenter">
         <button className="btn">
           <EditIcon fontSize="small" onClick={() => editProduto(index)} />

@@ -249,7 +249,7 @@ export default function Clientes() {
       <Title name="Clientes">
         <GroupsIcon fontSize="large" />
       </Title>
-
+      <h2 className="tdCenter">Cadastro de Clientes</h2>
       <form className="formCliente">
         <div>
           <label>Nome</label>

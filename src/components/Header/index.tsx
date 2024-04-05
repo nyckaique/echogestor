@@ -22,7 +22,7 @@ import StoreIcon from "@mui/icons-material/Store";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import LogoutIcon from "@mui/icons-material/Logout";
 import "./header.css";
-import echocrmlogo from "../../assets/echocrmlogo.png";
+import echogestorlogo from "../../assets/echogestorlogo.png";
 import { AuthContext } from "../../contexts/auth";
 import { useContext } from "react";
 
@@ -47,7 +47,7 @@ const navLinks = [
   "home",
   "perfil",
   "clientes",
-  "agenda",
+  "agendamentos",
   "produtos",
   "faturamento",
 ];
@@ -80,8 +80,8 @@ export default function Header(props: Props) {
         sx={{ my: 2, color: "#e3e2e9" }}
         className="flex"
       >
-        <img src={echocrmlogo} alt="Avatar" className="logo" />
-        Echo CRM
+        <img src={echogestorlogo} alt="Avatar" className="logo" />
+        Echo Gestor
       </Typography>
       <Divider />
       <List>
@@ -122,7 +122,7 @@ export default function Header(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <img src={echocrmlogo} alt="Avatar" className="logo" />
+          <img src={echogestorlogo} alt="Avatar" className="logo" />
           <Typography
             variant="h6"
             component="div"
@@ -132,7 +132,7 @@ export default function Header(props: Props) {
               color: "#e3e2e9",
             }}
           >
-            Echo CRM
+            Echo Gestor
           </Typography>
           <Box
             sx={{
@@ -140,10 +140,11 @@ export default function Header(props: Props) {
               flexShrink: 1,
               flexWrap: "wrap",
               alignItems: "center",
+              gap: ".5em",
             }}
           >
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
+              <Button key={item} sx={{ color: "#fff", padding: "0" }}>
                 <Link
                   to={`/${navLinks[navItems.indexOf(item)]}`}
                   className="Link"
@@ -155,7 +156,7 @@ export default function Header(props: Props) {
               </Button>
             ))}
             <button onClick={logout} className="logoutBtn">
-              <LogoutIcon />
+              <LogoutIcon fontSize="small" />
             </button>
           </Box>
         </Toolbar>

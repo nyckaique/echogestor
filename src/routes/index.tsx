@@ -6,6 +6,7 @@ import Private from "./Private";
 import Profile from "../pages/Profile";
 import Clientes from "../pages/Clientes";
 import Produtos from "../pages/Produtos";
+import Agendamentos from "../pages/Agendamentos";
 
 export default function RoutesApp() {
   return (
@@ -41,6 +42,14 @@ export default function RoutesApp() {
         element={
           <Private>
             <Produtos />
+          </Private>
+        }
+      />
+      <Route
+        path="/agendamentos"
+        element={
+          <Private>
+            <Agendamentos />
           </Private>
         }
       />
