@@ -172,29 +172,11 @@ export default function Clientes() {
         })
           .then(() => {
             alert("Atualizado com sucesso!");
-            setIndex("");
-            setEstaAtualizando(false);
-            setNome("");
-            setInputCEP("");
-            setEndereco("");
-            setNumero("");
-            setBairro("");
-            setCidade("");
-            setEstado("");
-            setTelefone("");
+            limpar();
           })
           .catch((error) => {
             alert("Não foi possível atualizar dados");
-            setIndex("");
-            setEstaAtualizando(false);
-            setNome("");
-            setInputCEP("");
-            setEndereco("");
-            setNumero("");
-            setBairro("");
-            setCidade("");
-            setEstado("");
-            setTelefone("");
+            limpar();
           });
       } else {
         let novoNome = nome.charAt(0).toUpperCase() + nome.slice(1);
@@ -212,18 +194,12 @@ export default function Clientes() {
           user: user.uid,
         })
           .then(() => {
-            setNome("");
-            setInputCEP("");
-            setEndereco("");
-            setNumero("");
-            setBairro("");
-            setCidade("");
-            setEstado("");
-            setTelefone("");
+            limpar();
             alert("Cadastrado novo cliente com sucesso!");
           })
           .catch((error) => {
             alert("Não foi possível realizar o cadastro no momento");
+            limpar();
             console.log(error);
           });
       }
@@ -376,6 +352,7 @@ export default function Clientes() {
               <th>Nome</th>
               <th>Telefone</th>
               <th>Cidade</th>
+              <th>Informações</th>
               <th>Editar</th>
               <th>Excluir</th>
             </tr>
@@ -387,6 +364,7 @@ export default function Clientes() {
                     <Cliente
                       key={index}
                       index={index}
+                      id={cliente.id}
                       nome={cliente.nomeCliente}
                       cidade={cliente.cidade}
                       estado={cliente.estado}
@@ -401,6 +379,7 @@ export default function Clientes() {
                     <Cliente
                       key={index}
                       index={index}
+                      id={cliente.id}
                       nome={cliente.nomeCliente}
                       cidade={cliente.cidade}
                       estado={cliente.estado}

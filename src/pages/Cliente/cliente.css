@@ -1,0 +1,15 @@
+.clienteInfo {
+  margin-left: 1em;
+}
+.tableHistorico {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  max-width: 90%;
+  margin: auto;
+  margin-bottom: 1em;
+  gap: 0.5em;
+}
+.tableHistorico h2 {
+  margin: auto;
+}

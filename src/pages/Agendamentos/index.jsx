@@ -41,9 +41,20 @@ export default function Agendamentos() {
   const [filtro, setFiltro] = useState("");
   const [selectedCliente, setSelectedCliente] = useState(null);
   const [selectedProduto, setSelectedProduto] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState(null);
   const [estaAtualizando, setEstaAtualizando] = useState(false);
   const [index, setIndex] = useState("");
   const [date, setDate] = useState(null);
+  const statusOptions = [
+    {
+      value: true,
+      label: "Concluído",
+    },
+    {
+      value: false,
+      label: "Aguardando pagamento",
+    },
+  ];
 
   useEffect(() => {
     function ordenar(a, b) {
@@ -100,6 +111,7 @@ export default function Agendamentos() {
             nomeProduto: doc.data().nomeProduto,
             valorProduto: doc.data().valorProduto,
             date: doc.data().date,
+            status: doc.data().status,
           });
         });
         //console.log(lista);
@@ -124,6 +136,7 @@ export default function Agendamentos() {
           nomeProduto: selectedProduto.label,
           valorProduto: selectedProduto.valorProduto,
           date: novadata,
+          status: selectedStatus.value,
         })
           .then(() => {
             limpar();
@@ -142,6 +155,7 @@ export default function Agendamentos() {
           nomeProduto: selectedProduto.label,
           valorProduto: selectedProduto.valorProduto,
           date: novadata,
+          status: false,
           user: user.uid,
         })
           .then(() => {
@@ -210,11 +224,17 @@ export default function Agendamentos() {
     let produto = produtos.find(
       (produto) => produto.value === agendamentos[index].produto
     );
+    let date = dayjs(new Date(agendamentos[index].date));
     console.log(agendamentos[index]);
+    console.log(date);
     console.log(cliente);
     console.log(produto);
     setSelectedCliente(cliente);
     setSelectedProduto(produto);
+    setSelectedStatus(
+      agendamentos[index].status ? statusOptions[0] : statusOptions[1]
+    );
+    setDate(date);
   }
 
   return (
@@ -260,6 +280,19 @@ export default function Agendamentos() {
             />
           </LocalizationProvider>
         </div>
+        {estaAtualizando ? (
+          <div>
+            <label>Status</label>
+            <Select
+              className="Select"
+              options={statusOptions}
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e)}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="divBtn">
           <Button variant="contained" onClick={formSubmit}>
             {estaAtualizando ? "Atualizar" : "Confirmar"}
@@ -286,6 +319,7 @@ export default function Agendamentos() {
               <th>Nome</th>
               <th>Produto/Serviço</th>
               <th>Horário</th>
+              <th>Status</th>
               <th>Editar</th>
               <th>Excluir</th>
             </tr>
@@ -303,6 +337,9 @@ export default function Agendamentos() {
                       nomeProduto={agendamento.nomeProduto}
                       valorProduto={agendamento.valorProduto}
                       horario={agendamento.date}
+                      status={agendamento.status}
+                      editAgendamento={editAgendamento}
+                      deleteAgendamento={deleteAgendamento}
                     />
                   );
                 })
@@ -317,6 +354,7 @@ export default function Agendamentos() {
                       nomeProduto={agendamento.nomeProduto}
                       valorProduto={agendamento.valorProduto}
                       horario={agendamento.date}
+                      status={agendamento.status}
                       editAgendamento={editAgendamento}
                       deleteAgendamento={deleteAgendamento}
                     />

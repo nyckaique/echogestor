@@ -7,6 +7,7 @@ import Profile from "../pages/Profile";
 import Clientes from "../pages/Clientes";
 import Produtos from "../pages/Produtos";
 import Agendamentos from "../pages/Agendamentos";
+import Cliente from "../pages/Cliente";
 
 export default function RoutesApp() {
   return (
@@ -50,6 +51,14 @@ export default function RoutesApp() {
         element={
           <Private>
             <Agendamentos />
+          </Private>
+        }
+      />
+      <Route
+        path="/cliente/:id"
+        element={
+          <Private>
+            <Cliente />
           </Private>
         }
       />
