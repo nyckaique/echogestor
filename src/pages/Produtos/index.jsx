@@ -3,58 +3,27 @@ import Title from "../../components/Title";
 import StoreIcon from "@mui/icons-material/Store";
 import "./produtos.css";
 import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   updateDoc,
   collection,
   addDoc,
   doc,
   deleteDoc,
-  onSnapshot,
-  where,
 } from "firebase/firestore";
 import { db } from "../../services/firebaseConnection";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/auth";
-import Produto from "../../components/Produto";
 
-const listRef = collection(db, "produtos");
+import ProdutosTable from "../../components/ProdutosTable";
+
 export default function Produtos() {
+  const { user, produtos } = useContext(AuthContext);
   const [estaAtualizando, setEstaAtualizando] = useState(false);
   const [nomeProduto, setNomeProduto] = useState("");
   const [valorProduto, setValorProduto] = useState("");
-  const [produtos, setProdutos] = useState([]);
   const [index, setIndex] = useState("");
-  const [produtosFiltrados, setProdutosFiltrados] = useState([]);
   const [filtro, setFiltro] = useState("");
-  const { user } = useContext(AuthContext);
-
-  useEffect(() => {
-    function ordenar(a, b) {
-      if (a.nomeProduto < b.nomeProduto) {
-        return -1;
-      }
-      if (a.nomeProduto > b.nomeProduto) {
-        return 1;
-      }
-      return 0;
-    }
-    async function loadProdutos() {
-      onSnapshot(listRef, where("user", "==", user.uid), (snapshot) => {
-        let lista = [];
-        snapshot.forEach((doc) => {
-          lista.push({
-            id: doc.id,
-            nomeProduto: doc.data().nomeProduto,
-            valorProduto: doc.data().valorProduto,
-          });
-        });
-        lista.sort(ordenar);
-        setProdutos(lista);
-      });
-    }
-    loadProdutos();
-  }, []);
 
   async function formSubmit() {
     if (nomeProduto !== "" && valorProduto !== "") {
@@ -129,21 +98,12 @@ export default function Produtos() {
     }
   }
 
-  function filtrar(e) {
-    setFiltro(e.target.value);
-
-    const valor = filtro
+  function handleFiltro(e) {
+    const valor = e.target.value
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
-    const filtrado = produtos.filter((produto) =>
-      produto.nomeProduto
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .includes(valor)
-    );
-    setProdutosFiltrados(filtrado);
+    setFiltro(valor);
   }
 
   return (
@@ -183,53 +143,23 @@ export default function Produtos() {
       </form>
 
       <div className="containerProduto">
+        <h2>Produtos/Serviços</h2>
         <div>
           Buscar:{" "}
           <input
             type="text"
-            onChange={filtrar}
+            onChange={handleFiltro}
             value={filtro}
             className="inputText"
           />
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Valor</th>
-              <th>Editar</th>
-              <th>Excluir</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtro !== ""
-              ? produtosFiltrados.map((produto, index) => {
-                  return (
-                    <Produto
-                      key={index}
-                      index={index}
-                      nomeProduto={produto.nomeProduto}
-                      valorProduto={produto.valorProduto}
-                      editProduto={editProduto}
-                      deleteProduto={deleteProduto}
-                    />
-                  );
-                })
-              : produtos.map((produto, index) => {
-                  return (
-                    <Produto
-                      key={index}
-                      index={index}
-                      nomeProduto={produto.nomeProduto}
-                      valorProduto={produto.valorProduto}
-                      editProduto={editProduto}
-                      deleteProduto={deleteProduto}
-                    />
-                  );
-                })}
-          </tbody>
-        </table>
       </div>
+
+      <ProdutosTable
+        filtro={filtro}
+        editProduto={editProduto}
+        deleteProduto={deleteProduto}
+      />
     </div>
   );
 }

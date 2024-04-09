@@ -13,3 +13,6 @@
 .tableHistorico h2 {
   margin: auto;
 }
+.tableHistorico td {
+  text-wrap: nowrap;
+}

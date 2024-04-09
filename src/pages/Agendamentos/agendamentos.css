@@ -1,16 +1,17 @@
 .containerAgendamentos {
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   align-items: center;
+  margin: 0 auto 1em;
 }
 .formAgendamentos {
   display: flex;
   flex-direction: column;
-  width: 320px;
+  width: 350px;
   max-width: 90%;
-  margin: auto;
   margin-bottom: 1em;
   gap: 0.5em;
 }
@@ -55,4 +56,31 @@ td {
 }
 .tdCenter {
   text-align: center;
+}
+.formFiltros {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  max-width: 90%;
+  margin-bottom: 1em;
+  gap: 0.5em;
+}
+.formFiltros div:not(:last-of-type) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5em;
+}
+.formFiltros .inputText {
+  margin: 0;
+  flex-grow: 1;
+}
+.formContent {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: top;
+  flex-wrap: wrap;
+  padding-top: 1em;
+  gap: 1em;
 }

@@ -2,17 +2,13 @@ import Header from "../../components/Header";
 import Title from "../../components/Title";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Select from "react-select";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   addDoc,
   collection,
   deleteDoc,
   doc,
-  onSnapshot,
-  orderBy,
-  query,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import { db } from "../../services/firebaseConnection";
 import { useContext } from "react";
@@ -21,30 +17,19 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/pt-br";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { Button } from "@mui/material";
-import Agendamento from "../../components/Agendamento";
+import AgendamentosTable from "../../components/AgendamentosTable";
 import "./agendamentos.css";
 import dayjs from "dayjs";
-
-const listRef1 = collection(db, "clientes");
-const listRef2 = collection(db, "produtos");
-const listRef3 = collection(db, "agendamentos");
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function Agendamentos() {
-  const { user } = useContext(AuthContext);
-
-  const [clientes, setClientes] = useState([]);
-  const [produtos, setProdutos] = useState([]);
-  const [agendamentos, setAgendamentos] = useState([]);
-  const [agendamentosFiltrados, setAgendamentosFiltrados] = useState([]);
-  const [filtro, setFiltro] = useState("");
-  const [selectedCliente, setSelectedCliente] = useState(null);
-  const [selectedProduto, setSelectedProduto] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState(null);
-  const [estaAtualizando, setEstaAtualizando] = useState(false);
-  const [index, setIndex] = useState("");
-  const [date, setDate] = useState(null);
+  const { user, clientes, agendamentos, produtos } = useContext(AuthContext);
   const statusOptions = [
     {
       value: true,
@@ -55,70 +40,63 @@ export default function Agendamentos() {
       label: "Aguardando pagamento",
     },
   ];
+  const filtroStatusOptions = [
+    {
+      value: null,
+      label: "Todos",
+    },
+    {
+      value: true,
+      label: "Concluído",
+    },
+    {
+      value: false,
+      label: "Aguardando pagamento",
+    },
+  ];
+  const [clientesLista, setClientesLista] = useState([]);
+  const [produtosLista, setProdutosLista] = useState([]);
+  const [filtro, setFiltro] = useState("");
+  const [selectedCliente, setSelectedCliente] = useState(null);
+  const [selectedProduto, setSelectedProduto] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState(null);
+  const [selectedFiltroStatus, setSelectedFiltroStatus] = useState(
+    filtroStatusOptions[0]
+  );
+  const [estaAtualizando, setEstaAtualizando] = useState(false);
+  const [index, setIndex] = useState("");
+  const [date, setDate] = useState(null);
+  const [dateRange, setDateRange] = useState([null, null]);
+  const select = useRef(null);
+  const [accordionOpen, setAccordionOpen] = useState(false);
+
+  const handleAccordionClick = () => {
+    setAccordionOpen(!accordionOpen);
+  };
+
+  const handleButtonClick = () => {
+    setAccordionOpen(true);
+  };
 
   useEffect(() => {
-    function ordenar(a, b) {
-      if (a.label < b.label) {
-        return -1;
-      }
-      if (a.label > b.label) {
-        return 1;
-      }
-      return 0;
-    }
-    async function loadClientesProdutos() {
-      onSnapshot(listRef1, where("user", "==", user.uid), (snapshot) => {
-        let lista = [];
-        snapshot.forEach((doc) => {
-          lista.push({
-            value: doc.id,
-            label: doc.data().nomeCliente,
-          });
-        });
-        lista.sort(ordenar);
-        setClientes(lista);
+    let listaClientes = [];
+    clientes.forEach((cliente) => {
+      listaClientes.push({
+        value: cliente.id,
+        label: cliente.nomeCliente,
       });
-      onSnapshot(listRef2, where("user", "==", user.uid), (snapshot) => {
-        let lista = [];
-        snapshot.forEach((doc) => {
-          lista.push({
-            value: doc.id,
-            label: doc.data().nomeProduto,
-            valorProduto: doc.data().valorProduto,
-          });
-        });
-        //console.log(lista);
-        lista.sort(ordenar);
-        setProdutos(lista);
-      });
-    }
-    loadClientesProdutos();
+    });
+    setClientesLista(listaClientes);
 
-    async function loadAgendamentos() {
-      const q = query(
-        listRef3,
-        where("user", "==", user.uid),
-        orderBy("date", "asc")
-      );
-      onSnapshot(q, (snapshot) => {
-        let lista = [];
-        snapshot.forEach((doc) => {
-          lista.push({
-            id: doc.id,
-            cliente: doc.data().cliente,
-            nomeCliente: doc.data().nomeCliente,
-            produto: doc.data().produto,
-            nomeProduto: doc.data().nomeProduto,
-            valorProduto: doc.data().valorProduto,
-            date: doc.data().date,
-            status: doc.data().status,
-          });
-        });
-        //console.log(lista);
-        setAgendamentos(lista);
+    let listaProdutos = [];
+    produtos.forEach((produto) => {
+      listaProdutos.push({
+        value: produto.id,
+        label: produto.nomeProduto,
+        valorProduto: produto.valorProduto,
       });
-    }
-    loadAgendamentos();
+    });
+    setProdutosLista(listaProdutos);
   }, []);
 
   async function formSubmit() {
@@ -178,21 +156,13 @@ export default function Agendamentos() {
     setEstaAtualizando(false);
     setDate(null);
   }
-  function filtrar(e) {
-    setFiltro(e.target.value);
 
-    const valor = filtro
+  function handleFiltro(e) {
+    const valor = e.target.value
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
-    const filtrado = agendamentos.filter((agendamento) =>
-      agendamento.nomeCliente
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .includes(valor)
-    );
-    setAgendamentosFiltrados(filtrado);
+    setFiltro(valor);
   }
   async function deleteAgendamento(index) {
     let date = new Date(agendamentos[index].date);
@@ -218,10 +188,12 @@ export default function Agendamentos() {
   function editAgendamento(index) {
     setEstaAtualizando(true);
     setIndex(index);
-    let cliente = clientes.find(
+    handleButtonClick();
+    select.current.focus();
+    let cliente = clientesLista.find(
       (cliente) => cliente.value === agendamentos[index].cliente
     );
-    let produto = produtos.find(
+    let produto = produtosLista.find(
       (produto) => produto.value === agendamentos[index].produto
     );
     let date = dayjs(new Date(agendamentos[index].date));
@@ -236,6 +208,11 @@ export default function Agendamentos() {
     );
     setDate(date);
   }
+  function limpaFiltros() {
+    setFiltro("");
+    setSelectedFiltroStatus(filtroStatusOptions[0]);
+    setDateRange([null, null]);
+  }
 
   return (
     <div>
@@ -243,126 +220,147 @@ export default function Agendamentos() {
       <Title name="Agendamentos">
         <CalendarMonthIcon fontSize="large" />
       </Title>
-      <form className="formAgendamentos">
-        <h2>Agendar serviço</h2>
-        <div>
-          <label>Cliente</label>
-          <Select
-            className="Select"
-            options={clientes}
-            value={selectedCliente}
-            onChange={(e) => setSelectedCliente(e)}
-          />
-        </div>
-        <div>
-          <label>Produto/Serviço</label>
-          <Select
-            className="Select"
-            options={produtos}
-            value={selectedProduto}
-            onChange={(e) => setSelectedProduto(e)}
-          />
-        </div>
-        <div>
-          <label>Data e horário</label>
-          <LocalizationProvider
-            dateAdapter={AdapterDayjs}
-            adapterLocale="pt-br"
-          >
-            <DateTimePicker
-              className="Select"
-              onChange={(e) => {
-                setDate(e);
-                console.log(e);
-              }}
-              value={date}
-              inputFormat="dd.MM.yyyy"
-            />
-          </LocalizationProvider>
-        </div>
-        {estaAtualizando ? (
-          <div>
-            <label>Status</label>
-            <Select
-              className="Select"
-              options={statusOptions}
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e)}
-            />
-          </div>
-        ) : (
-          <></>
-        )}
-        <div className="divBtn">
-          <Button variant="contained" onClick={formSubmit}>
-            {estaAtualizando ? "Atualizar" : "Confirmar"}
-          </Button>
-          <Button variant="contained" onClick={limpar}>
-            Limpar
-          </Button>
-        </div>
-      </form>
 
-      <div className="containerAgendamentos">
-        <div>
-          Buscar por nome:{" "}
-          <input
-            type="text"
-            onChange={filtrar}
-            value={filtro}
-            className="inputText"
-          />
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Produto/Serviço</th>
-              <th>Horário</th>
-              <th>Status</th>
-              <th>Editar</th>
-              <th>Excluir</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtro !== ""
-              ? agendamentosFiltrados.map((agendamento, index) => {
-                  return (
-                    <Agendamento
-                      key={index}
-                      index={index}
-                      clienteId={agendamento.cliente}
-                      nomeCliente={agendamento.nomeCliente}
-                      produtoId={agendamento.produto}
-                      nomeProduto={agendamento.nomeProduto}
-                      valorProduto={agendamento.valorProduto}
-                      horario={agendamento.date}
-                      status={agendamento.status}
-                      editAgendamento={editAgendamento}
-                      deleteAgendamento={deleteAgendamento}
-                    />
-                  );
-                })
-              : agendamentos.map((agendamento, index) => {
-                  return (
-                    <Agendamento
-                      key={index}
-                      index={index}
-                      clienteId={agendamento.cliente}
-                      nomeCliente={agendamento.nomeCliente}
-                      produtoId={agendamento.produto}
-                      nomeProduto={agendamento.nomeProduto}
-                      valorProduto={agendamento.valorProduto}
-                      horario={agendamento.date}
-                      status={agendamento.status}
-                      editAgendamento={editAgendamento}
-                      deleteAgendamento={deleteAgendamento}
-                    />
-                  );
-                })}
-          </tbody>
-        </table>
+      <div className="formContent">
+        <form className="formAgendamentos">
+          <Accordion expanded={accordionOpen} onChange={handleAccordionClick}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1-content"
+              id="panel1-header"
+            >
+              <h2>Agendar serviço</h2>
+            </AccordionSummary>
+            <AccordionDetails className="formAgendamentos">
+              <div>
+                <label>Cliente</label>
+                <Select
+                  className="Select"
+                  ref={select}
+                  options={clientesLista}
+                  value={selectedCliente}
+                  onChange={(e) => setSelectedCliente(e)}
+                />
+              </div>
+              <div>
+                <label>Produto/Serviço</label>
+                <Select
+                  className="Select"
+                  options={produtosLista}
+                  value={selectedProduto}
+                  onChange={(e) => setSelectedProduto(e)}
+                />
+              </div>
+              <div>
+                <label>Data e horário</label>
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  adapterLocale="pt-br"
+                >
+                  <DateTimePicker
+                    className="Select"
+                    onChange={(e) => {
+                      setDate(e);
+                      console.log(e);
+                    }}
+                    value={date}
+                    inputFormat="dd.MM.yyyy"
+                  />
+                </LocalizationProvider>
+              </div>
+              {estaAtualizando ? (
+                <div>
+                  <label>Status</label>
+                  <Select
+                    className="Select"
+                    options={statusOptions}
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e)}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+              <div className="divBtn">
+                <Button variant="contained" onClick={formSubmit}>
+                  {estaAtualizando ? "Atualizar" : "Confirmar"}
+                </Button>
+                <Button variant="contained" onClick={limpar}>
+                  Limpar
+                </Button>
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        </form>
+
+        <form className="formFiltros">
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2-content"
+              id="panel2-header"
+            >
+              <h2>Filtros</h2>
+            </AccordionSummary>
+            <AccordionDetails className="formFiltros">
+              <div>
+                <label>Nome:</label>
+                <input
+                  type="text"
+                  onChange={handleFiltro}
+                  value={filtro}
+                  className="inputText"
+                />
+              </div>
+
+              <div>
+                <label>Data:</label>
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  adapterLocale="pt-br"
+                >
+                  <DatePicker
+                    label="Início"
+                    value={dateRange[0]}
+                    onChange={(e) => setDateRange([e, dateRange[1]])}
+                    //defaultValue={dayjs(new Date())}
+                  />
+                  <DatePicker
+                    label="Fim"
+                    value={dateRange[1]}
+                    onChange={(e) => setDateRange([dateRange[0], e])}
+                    //defaultValue={dayjs(new Date())}
+                  />
+                </LocalizationProvider>
+              </div>
+              <div>
+                <label>Status:</label>
+                <Select
+                  className="Select"
+                  options={filtroStatusOptions}
+                  value={selectedFiltroStatus}
+                  onChange={(e) => setSelectedFiltroStatus(e)}
+                />
+              </div>
+              <Button
+                variant="contained"
+                onClick={limpaFiltros}
+                style={{ width: "fit-content", margin: "auto" }}
+              >
+                Limpar filtros
+              </Button>
+            </AccordionDetails>
+          </Accordion>
+        </form>
       </div>
+
+      <AgendamentosTable
+        filtro={filtro}
+        filtroStatus={selectedFiltroStatus}
+        dateRange={dateRange}
+        editAgendamento={editAgendamento}
+        deleteAgendamento={deleteAgendamento}
+      />
     </div>
   );
 }

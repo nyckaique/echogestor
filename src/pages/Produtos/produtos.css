@@ -1,9 +1,14 @@
 .containerProduto {
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   align-items: center;
+  margin: 0 auto 1em;
+}
+.containerProduto div input {
+  margin: 0;
 }
 .formProduto {
   display: flex;

@@ -2,12 +2,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CloseIcon from "@mui/icons-material/Close";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../services/firebaseConnection";
+import { AuthContext } from "../../contexts/auth";
 
 const style = {
   position: "absolute",
@@ -36,25 +35,11 @@ export default function Agendamento({
 }) {
   let date = new Date(horario);
 
+  const { clientes } = useContext(AuthContext);
   const [cliente, setCliente] = useState({});
-  useEffect(() => {
-    async function loadCliente() {
-      let docRef = doc(db, "clientes", clienteId);
 
-      await getDoc(docRef).then((doc) => {
-        setCliente({
-          nomeCliente: doc.data().nomeCliente,
-          cep: doc.data().cep,
-          endereco: doc.data().endereco,
-          numero: doc.data().numero,
-          bairro: doc.data().bairro,
-          cidade: doc.data().cidade,
-          estado: doc.data().estado,
-          telefone: doc.data().telefone,
-        });
-      });
-    }
-    loadCliente();
+  useEffect(() => {
+    setCliente(clientes.find((cliente) => cliente.id === clienteId));
   }, []);
 
   const [open, setOpen] = useState(false);
@@ -71,7 +56,11 @@ export default function Agendamento({
         }}
       >
         {nomeCliente}{" "}
-        <button className="btn" onClick={handleOpen}>
+        <button
+          className="btn"
+          onClick={handleOpen}
+          style={{ marginLeft: "0.5em" }}
+        >
           <VisibilityIcon fontSize="small" />
         </button>
         <Modal

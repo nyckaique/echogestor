@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import Header from "../../components/Header";
 import Title from "../../components/Title";
 import "./clientes.css";
@@ -11,20 +11,17 @@ import {
   addDoc,
   collection,
   doc,
-  where,
   updateDoc,
   deleteDoc,
-  onSnapshot,
 } from "firebase/firestore";
 
 import { AuthContext } from "../../contexts/auth";
-import Cliente from "../../components/Cliente";
 import apiCEP from "../../services/cep";
 import SearchIcon from "@mui/icons-material/Search";
-
-const listRef = collection(db, "clientes");
+import ClientesTable from "../../components/ClientesTable";
 
 export default function Clientes() {
+  const { user, clientes } = useContext(AuthContext);
   const [nome, setNome] = useState("");
   const [endereco, setEndereco] = useState("");
   const [bairro, setBairro] = useState("");
@@ -32,63 +29,17 @@ export default function Clientes() {
   const [estado, setEstado] = useState("");
   const [numero, setNumero] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [clientes, setClientes] = useState([]);
   const [estaAtualizando, setEstaAtualizando] = useState(false);
   const [index, setIndex] = useState("");
   const [inputCEP, setInputCEP] = useState("");
-  const [cep, setCEP] = useState({});
-  const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [filtro, setFiltro] = useState("");
-  const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    function ordenar(a, b) {
-      if (a.nomeCliente < b.nomeCliente) {
-        return -1;
-      }
-      if (a.nomeCliente > b.nomeCliente) {
-        return 1;
-      }
-      return 0;
-    }
-    async function loadClientes() {
-      onSnapshot(listRef, where("user", "==", user.uid), (snapshot) => {
-        let lista = [];
-        snapshot.forEach((doc) => {
-          lista.push({
-            id: doc.id,
-            nomeCliente: doc.data().nomeCliente,
-            cep: doc.data().cep,
-            endereco: doc.data().endereco,
-            numero: doc.data().numero,
-            bairro: doc.data().bairro,
-            cidade: doc.data().cidade,
-            estado: doc.data().estado,
-            telefone: doc.data().telefone,
-          });
-        });
-        lista.sort(ordenar);
-        setClientes(lista);
-      });
-    }
-    loadClientes();
-  }, []);
-
-  function filtrar(e) {
-    setFiltro(e.target.value);
-
-    const valor = filtro
+  function handleFiltro(e) {
+    const valor = e.target.value
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
-    const filtrado = clientes.filter((cliente) =>
-      cliente.nomeCliente
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .includes(valor)
-    );
-    setClientesFiltrados(filtrado);
+    setFiltro(valor);
   }
 
   function editCliente(index) {
@@ -129,7 +80,7 @@ export default function Clientes() {
 
     try {
       const response = await apiCEP.get(`${inputCEP}/json`);
-      setCEP(response.data);
+
       console.log(response.data);
       setBairro(response.data.bairro);
       setCidade(response.data.localidade);
@@ -338,60 +289,22 @@ export default function Clientes() {
 
       <div className="containerCliente">
         <div>
+          <h2>Meus Clientes</h2>
           Buscar:{" "}
           <input
             type="text"
-            onChange={filtrar}
+            onChange={handleFiltro}
             value={filtro}
             className="inputText"
           />
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Telefone</th>
-              <th>Cidade</th>
-              <th>Informações</th>
-              <th>Editar</th>
-              <th>Excluir</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtro !== ""
-              ? clientesFiltrados.map((cliente, index) => {
-                  return (
-                    <Cliente
-                      key={index}
-                      index={index}
-                      id={cliente.id}
-                      nome={cliente.nomeCliente}
-                      cidade={cliente.cidade}
-                      estado={cliente.estado}
-                      telefone={cliente.telefone}
-                      editCliente={editCliente}
-                      deleteCliente={deleteCliente}
-                    />
-                  );
-                })
-              : clientes.map((cliente, index) => {
-                  return (
-                    <Cliente
-                      key={index}
-                      index={index}
-                      id={cliente.id}
-                      nome={cliente.nomeCliente}
-                      cidade={cliente.cidade}
-                      estado={cliente.estado}
-                      telefone={cliente.telefone}
-                      editCliente={editCliente}
-                      deleteCliente={deleteCliente}
-                    />
-                  );
-                })}
-          </tbody>
-        </table>
       </div>
+
+      <ClientesTable
+        filtro={filtro}
+        editCliente={editCliente}
+        deleteCliente={deleteCliente}
+      />
     </div>
   );
 }
