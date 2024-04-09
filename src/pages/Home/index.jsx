@@ -27,7 +27,9 @@ export default function Home() {
       });
       let b = 0;
       a.map((item) => {
-        b = b + Number(item.valorProduto);
+        if (item.status) {
+          b = b + Number(item.valorProduto);
+        }
       });
 
       setFaturamento(b);
@@ -60,15 +62,18 @@ export default function Home() {
           </span>
         </div>
       </div>
-
+      <h2 style={{ width: "100%", textAlign: "center" }}>
+        Agendamentos do dia
+      </h2>
       <div className="agendaTable">
-        <h2>Agendamentos do dia</h2>
         <table>
           <thead>
-            <th>Nome</th>
-            <th>Produto/Serviço</th>
-            <th>Horário</th>
-            <th>Status</th>
+            <tr>
+              <th>Nome</th>
+              <th>Produto / Serviço</th>
+              <th>Horário</th>
+              <th>Status</th>
+            </tr>
           </thead>
           <tbody>
             {agendamentosHoje.map((agendamento, index) => {
@@ -80,10 +85,12 @@ export default function Home() {
                   <td>
                     {agendamento.nomeProduto}
                     {": "}
-                    {agendamento.valorProduto.toLocaleString("pt-br", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
+                    <b>
+                      {agendamento.valorProduto.toLocaleString("pt-br", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </b>
                   </td>
                   <td>
                     {date.toLocaleTimeString([], {
@@ -93,8 +100,28 @@ export default function Home() {
                     {"h "}
                     {date.toLocaleDateString()}
                   </td>
-                  <td>
-                    {agendamento.status ? "Concluído" : "Aguardando pagamento"}
+                  <td style={{ textAlign: "center" }}>
+                    {agendamento.status ? (
+                      <p
+                        style={{
+                          backgroundColor: "#5cb85c",
+                          borderRadius: "0.5em",
+                          padding: "0.25em",
+                        }}
+                      >
+                        Concluído
+                      </p>
+                    ) : (
+                      <p
+                        style={{
+                          backgroundColor: "#d9534f",
+                          borderRadius: "0.5em",
+                          padding: "0.25em",
+                        }}
+                      >
+                        Aguardando pagamento
+                      </p>
+                    )}
                   </td>
                 </tr>
               );

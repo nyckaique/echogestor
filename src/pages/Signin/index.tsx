@@ -30,6 +30,7 @@ export default function SignIn() {
           label="E-mail"
           variant="outlined"
           value={email}
+          autoFocus={true}
           onChange={(e) => setEmail(e.target.value)}
         />
         <TextField

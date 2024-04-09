@@ -8,6 +8,9 @@ html,
 body,
 #root {
   height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -26,7 +29,16 @@ ul {
 button {
   cursor: pointer;
 }
-
+.divBusca {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1em;
+}
+table {
+  overflow: hidden;
+}
 /* cores echo
 branco: e3e2e9
 cinza claro: d4d0d5

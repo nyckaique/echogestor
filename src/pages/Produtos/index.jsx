@@ -142,7 +142,7 @@ export default function Produtos() {
         </div>
       </form>
 
-      <div className="containerProduto">
+      <div className="divBusca">
         <h2>Produtos/Serviços</h2>
         <div>
           Buscar:{" "}

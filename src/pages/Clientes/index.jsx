@@ -287,9 +287,9 @@ export default function Clientes() {
         </div>
       </form>
 
-      <div className="containerCliente">
+      <div className="divBusca">
         <div>
-          <h2>Meus Clientes</h2>
+          <h2 style={{ textAlign: "center" }}>Meus Clientes</h2>
           Buscar:{" "}
           <input
             type="text"

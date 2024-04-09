@@ -103,10 +103,12 @@ export default function Agendamento({
       <td className="tdCenter">
         {nomeProduto}
         {": "}
-        {valorProduto.toLocaleString("pt-br", {
-          style: "currency",
-          currency: "BRL",
-        })}
+        <b>
+          {valorProduto.toLocaleString("pt-br", {
+            style: "currency",
+            currency: "BRL",
+          })}
+        </b>
       </td>
       <td className="tdCenter">
         {date.toLocaleTimeString([], {
@@ -117,7 +119,27 @@ export default function Agendamento({
         {date.toLocaleDateString()}
       </td>
       <td className="tdCenter">
-        {status ? "Concluído" : "Aguardando pagamento"}
+        {status ? (
+          <p
+            style={{
+              backgroundColor: "#5cb85c",
+              borderRadius: "0.5em",
+              padding: "0.25em",
+            }}
+          >
+            Concluído
+          </p>
+        ) : (
+          <p
+            style={{
+              backgroundColor: "#d9534f",
+              borderRadius: "0.5em",
+              padding: "0.25em",
+            }}
+          >
+            Aguardando pagamento
+          </p>
+        )}
       </td>
       <td className="tdCenter">
         <button className="btn">

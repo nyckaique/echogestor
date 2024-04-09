@@ -36,9 +36,8 @@ export default function Cliente() {
           <b>CEP: </b> {cliente.cep}
         </p>
       </div>
-
+      <h2 style={{ width: "100%", textAlign: "center" }}>Histórico</h2>
       <div className="tableHistorico">
-        <h2>Histórico</h2>
         <table>
           <thead>
             <tr>
@@ -70,9 +69,27 @@ export default function Cliente() {
                       {date.toLocaleDateString()}
                     </td>
                     <td className="tdCenter">
-                      {agendamento.status
-                        ? "Concluído"
-                        : "Aguardando pagamento"}
+                      {agendamento.status ? (
+                        <p
+                          style={{
+                            backgroundColor: "#5cb85c",
+                            borderRadius: "0.5em",
+                            padding: "0.25em",
+                          }}
+                        >
+                          Concluído
+                        </p>
+                      ) : (
+                        <p
+                          style={{
+                            backgroundColor: "#d9534f",
+                            borderRadius: "0.5em",
+                            padding: "0.25em",
+                          }}
+                        >
+                          Aguardando pagamento
+                        </p>
+                      )}
                     </td>
                   </tr>
                 );
