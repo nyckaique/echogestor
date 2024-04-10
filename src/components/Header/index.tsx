@@ -75,13 +75,13 @@ export default function Header(props: Props) {
       sx={{ textAlign: "center", height: "100%" }}
       className="backgroundColorGrey"
     >
+      <img src={echogestorlogo} alt="Avatar" className="logo" />
       <Typography
         variant="h6"
         sx={{ my: 2, color: "#e3e2e9" }}
         className="flex"
       >
-        <img src={echogestorlogo} alt="Avatar" className="logo" />
-        Echo Gestor
+        ECHO GESTOR
       </Typography>
       <Divider />
       <List>
@@ -128,11 +128,11 @@ export default function Header(props: Props) {
             component="div"
             sx={{
               flexGrow: 1,
-
               color: "#e3e2e9",
+              marginLeft: "1em",
             }}
           >
-            Echo Gestor
+            ECHO GESTOR
           </Typography>
           <Box
             sx={{

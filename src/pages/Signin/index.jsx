@@ -7,11 +7,22 @@ import echogestorlogo from "../../assets/echogestorlogo.png";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
+  const [emailRec, setEmailRec] = useState("");
   const [senha, setSenha] = useState("");
   const [errorEmail, setErrorEmail] = useState("");
+  const [errorEmailRec, setErrorEmailRec] = useState("");
+  const [open, setOpen] = useState(false);
 
-  const { signin, loadingAuth } = useContext(AuthContext);
-
+  const {
+    signin,
+    loadingAuth,
+    handleForgotPassword,
+    resetPasswordError,
+    resetPasswordSuccess,
+  } = useContext(AuthContext);
+  function handleOpen() {
+    setOpen(!open);
+  }
   async function handleSignIn(e) {
     e.preventDefault();
     setErrorEmail("");
@@ -25,6 +36,19 @@ export default function SignIn() {
       alert("Preencha todos os campos!");
     }
   }
+  function handleRecuperar(e) {
+    e.preventDefault();
+    setErrorEmailRec("");
+    if (emailRec !== "") {
+      if (!isValidEmail(emailRec)) {
+        setErrorEmailRec("Por favor, insira um email válido");
+      } else {
+        handleForgotPassword(emailRec);
+      }
+    } else {
+      alert("Preencha todos os campos!");
+    }
+  }
   const isValidEmail = (email) => {
     // Expressão regular para validar email
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,10 +56,9 @@ export default function SignIn() {
   };
   return (
     <div className="container">
-      <p className="titulo align-center">
-        {" "}
-        <img src={echogestorlogo} alt="Echo CRM Logo" className="logo" /> ECHO
-        GESTOR
+      <p className="titulo">
+        <img src={echogestorlogo} alt="Echo CRM Logo" className="logo" />
+        <span>ECHO GESTOR</span>
       </p>
       <form onSubmit={handleSignIn} className="box">
         <TextField
@@ -61,7 +84,43 @@ export default function SignIn() {
           {loadingAuth ? "Carregando..." : "Login"}
         </Button>
         <Link to="/cadastro">Criar uma conta</Link>
+        <Link onClick={handleOpen} variant="contained">
+          Recuperar acesso
+        </Link>
       </form>
+
+      <div className="box" style={{ visibility: open ? "visible" : "hidden" }}>
+        <p style={{ textAlign: "justify" }}>
+          Informe o e-mail da sua conta para recuperar a senha
+        </p>
+        <div style={{ display: "flex", width: "100%", gap: "1em" }}>
+          <TextField
+            className="input"
+            type="email"
+            label="E-mail de recuperação"
+            variant="outlined"
+            value={emailRec}
+            autoFocus={true}
+            error={!!errorEmailRec}
+            helperText={errorEmailRec}
+            onChange={(e) => setEmailRec(e.target.value)}
+          />
+          <Button variant="contained" onClick={handleRecuperar}>
+            Enviar
+          </Button>
+        </div>
+
+        {resetPasswordSuccess && (
+          <div style={{ color: "green", fontSize: "0.8em" }}>
+            {resetPasswordSuccess}
+          </div>
+        )}
+        {resetPasswordError && (
+          <div style={{ color: "red", fontSize: "0.8em" }}>
+            {resetPasswordError}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

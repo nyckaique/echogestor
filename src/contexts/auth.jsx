@@ -4,6 +4,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import {
   collection,
@@ -26,6 +28,8 @@ function AuthProvider({ children }) {
   const [agendamentos, setAgendamentos] = useState([]);
   const [produtos, setProdutos] = useState([]);
   const navigate = useNavigate();
+  const [resetPasswordError, setResetPasswordError] = useState(null);
+  const [resetPasswordSuccess, setResetPasswordSuccess] = useState(null);
 
   useEffect(() => {
     async function loadUser() {
@@ -39,6 +43,42 @@ function AuthProvider({ children }) {
 
     loadUser();
   }, []);
+
+  async function resetPass(email) {
+    await sendPasswordResetEmail(auth, email);
+  }
+  // Função para lidar com a recuperação de senha
+  async function handleForgotPassword(email) {
+    await fetchSignInMethodsForEmail(auth, email)
+      .then((signInMethods) => {
+        // Verifique se o email fornecido tem um método de login associado a ele
+        console.log(signInMethods);
+        if (signInMethods && signInMethods.includes("password")) {
+          // Email válido, envie o email de recuperação de senha
+
+          resetPass(email);
+        } else {
+          // O email fornecido não está associado a uma conta
+          throw new Error("O email fornecido não está cadastrado");
+        }
+      })
+      .then(() => {
+        // Email de recuperação de senha enviado com sucesso
+        setResetPasswordSuccess(
+          "Um email de recuperação de senha foi enviado para o email cadastrado."
+        );
+        setResetPasswordError(null);
+      })
+      .catch((error) => {
+        // Ocorreu um erro ao enviar o email de recuperação de senha
+        console.error(
+          "Erro ao enviar email de recuperação de senha:",
+          error.message
+        );
+        setResetPasswordError(error.message);
+        setResetPasswordSuccess(null);
+      });
+  }
 
   async function loadClientes(uid) {
     function ordenar(a, b) {
@@ -212,6 +252,9 @@ function AuthProvider({ children }) {
         loadingAuth,
         loading,
         storageUser,
+        handleForgotPassword,
+        resetPasswordError,
+        resetPasswordSuccess,
       }}
     >
       {children}
