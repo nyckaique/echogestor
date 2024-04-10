@@ -33,6 +33,9 @@ export default function Clientes() {
   const [index, setIndex] = useState("");
   const [inputCEP, setInputCEP] = useState("");
   const [filtro, setFiltro] = useState("");
+  const [errorCEP, setErrorCEP] = useState("");
+  const [errorNumero, setErrorNumero] = useState("");
+  const [errorTelefone, setErrorTelefone] = useState("");
 
   function handleFiltro(e) {
     const valor = e.target.value
@@ -92,6 +95,62 @@ export default function Clientes() {
     }
   }
 
+  const handleCEP = (event) => {
+    const newCep = event.target.value;
+    setInputCEP(newCep);
+    // Verifica se o CEP é válido
+    if (!isValidCep(newCep)) {
+      setErrorCEP("Insira um CEP válido");
+    } else {
+      setErrorCEP("");
+    }
+  };
+  const isValidCep = (cep) => {
+    // Expressão regular para validar o CEP
+    const regex = /^[0-9]{5}-?[0-9]{3}$/;
+    return regex.test(cep);
+  };
+
+  const handleNumero = (event) => {
+    const valor = event.target.value;
+    setNumero(valor);
+    if (!isValidNumber(valor)) {
+      setErrorNumero("Insira apenas números");
+    } else {
+      setErrorNumero("");
+    }
+  };
+  const isValidNumber = (Number) => {
+    const regex = /^[0-9]+$/;
+    return regex.test(Number);
+  };
+
+  const handlePhone = (event) => {
+    const valor = event.target.value;
+    const formattedValue = formatPhoneNumber(valor);
+    setTelefone(formattedValue);
+    // Verifica se o número de telefone é válido
+    if (!isValidPhoneNumber(valor)) {
+      setErrorTelefone("Insira um telefone válido");
+    } else {
+      setErrorTelefone("");
+    }
+  };
+  const formatPhoneNumber = (value) => {
+    // Remove caracteres não numéricos
+    const numericValue = value.replace(/\D/g, "");
+    // Formata o número de telefone (XX)99999-9999
+    const formattedValue = numericValue.replace(
+      /(\d{2})(\d{5})(\d{4})/,
+      "($1)$2-$3"
+    );
+    return formattedValue;
+  };
+  const isValidPhoneNumber = (phoneNumber) => {
+    // Verifica se o número de telefone tem 11 dígitos
+    return phoneNumber.replace(/\D/g, "").length === 11;
+  };
+
   async function formSubmit() {
     if (
       nome !== "" &&
@@ -103,56 +162,68 @@ export default function Clientes() {
       estado !== "" &&
       telefone !== ""
     ) {
-      if (estaAtualizando) {
-        let novoNome =
-          nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
-        let novoEndereco =
-          endereco.charAt(0).toUpperCase() + endereco.slice(1).toLowerCase();
-        let novaCidade =
-          cidade.charAt(0).toUpperCase() + cidade.slice(1).toLowerCase();
-        const docRef = doc(db, "clientes", clientes[index].id);
-        await updateDoc(docRef, {
-          nomeCliente: novoNome,
-          cep: inputCEP,
-          endereco: novoEndereco,
-          numero: numero,
-          bairro: bairro,
-          cidade: novaCidade,
-          estado: estado,
-          telefone: telefone,
-        })
-          .then(() => {
-            alert("Atualizado com sucesso!");
-            limpar();
-          })
-          .catch((error) => {
-            alert("Não foi possível atualizar dados");
-            limpar();
-          });
+      setErrorNumero("");
+      setErrorCEP("");
+      setErrorTelefone("");
+      if (!isValidNumber(inputCEP)) {
+        setErrorCEP("Insira um CEP válido");
+      } else if (!isValidNumber(numero)) {
+        setErrorNumero("Insira apenas números");
+      } else if (!isValidPhoneNumber(telefone)) {
+        setErrorTelefone("Insira um telefone válido");
       } else {
-        let novoNome = nome.charAt(0).toUpperCase() + nome.slice(1);
-        let novoEndereco = endereco.charAt(0).toUpperCase() + endereco.slice(1);
-        let novaCidade = cidade.charAt(0).toUpperCase() + cidade.slice(1);
-        await addDoc(collection(db, "clientes"), {
-          nomeCliente: novoNome,
-          cep: inputCEP,
-          endereco: novoEndereco,
-          numero: numero,
-          bairro: bairro,
-          cidade: novaCidade,
-          estado: estado,
-          telefone: telefone,
-          user: user.uid,
-        })
-          .then(() => {
-            limpar();
-            alert("Cadastrado novo cliente com sucesso!");
+        if (estaAtualizando) {
+          let novoNome =
+            nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+          let novoEndereco =
+            endereco.charAt(0).toUpperCase() + endereco.slice(1).toLowerCase();
+          let novaCidade =
+            cidade.charAt(0).toUpperCase() + cidade.slice(1).toLowerCase();
+          const docRef = doc(db, "clientes", clientes[index].id);
+          await updateDoc(docRef, {
+            nomeCliente: novoNome,
+            cep: inputCEP,
+            endereco: novoEndereco,
+            numero: numero,
+            bairro: bairro,
+            cidade: novaCidade,
+            estado: estado,
+            telefone: telefone,
           })
-          .catch((error) => {
-            alert("Não foi possível realizar o cadastro no momento");
-            limpar();
-            console.log(error);
-          });
+            .then(() => {
+              alert("Atualizado com sucesso!");
+              limpar();
+            })
+            .catch((error) => {
+              alert("Não foi possível atualizar dados");
+              limpar();
+            });
+        } else {
+          let novoNome = nome.charAt(0).toUpperCase() + nome.slice(1);
+          let novoEndereco =
+            endereco.charAt(0).toUpperCase() + endereco.slice(1);
+          let novaCidade = cidade.charAt(0).toUpperCase() + cidade.slice(1);
+          await addDoc(collection(db, "clientes"), {
+            nomeCliente: novoNome,
+            cep: inputCEP,
+            endereco: novoEndereco,
+            numero: numero,
+            bairro: bairro,
+            cidade: novaCidade,
+            estado: estado,
+            telefone: telefone,
+            user: user.uid,
+          })
+            .then(() => {
+              limpar();
+              alert("Cadastrado novo cliente com sucesso!");
+            })
+            .catch((error) => {
+              alert("Não foi possível realizar o cadastro no momento");
+              limpar();
+              console.log(error);
+            });
+        }
       }
     } else {
       alert("Preencha todos os campos!");
@@ -197,13 +268,13 @@ export default function Clientes() {
             type="text"
             value={inputCEP}
             placeholder="75500123"
-            onChange={(e) => {
-              setInputCEP(e.target.value);
-            }}
+            onChange={handleCEP}
           />
+
           <button onClick={getCEP} className="btn">
             <SearchIcon fontSize="small" />
           </button>
+          {errorCEP && <p>{errorCEP}</p>}
         </div>
         <div>
           <label>Endereço</label>
@@ -224,10 +295,9 @@ export default function Clientes() {
             type="text"
             value={numero}
             placeholder="123"
-            onChange={(e) => {
-              setNumero(e.target.value);
-            }}
-          />
+            onChange={handleNumero}
+          />{" "}
+          {errorNumero && <p>{errorNumero}</p>}
         </div>
         <div>
           <label>Bairro</label>
@@ -272,10 +342,9 @@ export default function Clientes() {
             type="text"
             value={telefone}
             placeholder="(99)99999-9999"
-            onChange={(e) => {
-              setTelefone(e.target.value);
-            }}
+            onChange={handlePhone}
           />
+          {errorTelefone && <p>{errorTelefone}</p>}
         </div>
         <div>
           <Button variant="contained" onClick={formSubmit}>

@@ -38,12 +38,9 @@ function AuthProvider({ children }) {
     }
 
     loadUser();
-    loadClientes();
-    loadAgendamentos();
-    loadProdutos();
   }, []);
 
-  async function loadClientes() {
+  async function loadClientes(uid) {
     function ordenar(a, b) {
       if (a.nomeCliente < b.nomeCliente) {
         return -1;
@@ -53,39 +50,36 @@ function AuthProvider({ children }) {
       }
       return 0;
     }
-    const listRef = collection(db, "clientes");
-    onSnapshot(
-      listRef,
-      where("user", "==", "dPC5ptWI79cvMw5e3fam9KXp5902"),
-      (snapshot) => {
-        let lista = [];
-        snapshot.forEach((doc) => {
-          lista.push({
-            id: doc.id,
-            nomeCliente: doc.data().nomeCliente,
-            cep: doc.data().cep,
-            endereco: doc.data().endereco,
-            numero: doc.data().numero,
-            bairro: doc.data().bairro,
-            cidade: doc.data().cidade,
-            estado: doc.data().estado,
-            telefone: doc.data().telefone,
-          });
+    const listRef1 = collection(db, "clientes");
+    const q1 = query(listRef1, where("user", "==", uid));
+    onSnapshot(q1, (snapshot) => {
+      let lista = [];
+      snapshot.forEach((doc) => {
+        lista.push({
+          id: doc.id,
+          nomeCliente: doc.data().nomeCliente,
+          cep: doc.data().cep,
+          endereco: doc.data().endereco,
+          numero: doc.data().numero,
+          bairro: doc.data().bairro,
+          cidade: doc.data().cidade,
+          estado: doc.data().estado,
+          telefone: doc.data().telefone,
         });
-        lista.sort(ordenar);
-        setClientes(lista);
-      }
-    );
+      });
+      lista.sort(ordenar);
+      setClientes(lista);
+    });
   }
 
-  async function loadAgendamentos() {
-    const listRef3 = collection(db, "agendamentos");
-    const q = query(
-      listRef3,
-      where("user", "==", "dPC5ptWI79cvMw5e3fam9KXp5902"),
+  async function loadAgendamentos(uid) {
+    const listRef2 = collection(db, "agendamentos");
+    const q2 = query(
+      listRef2,
+      where("user", "==", uid),
       orderBy("date", "asc")
     );
-    onSnapshot(q, (snapshot) => {
+    onSnapshot(q2, (snapshot) => {
       let lista = [];
       snapshot.forEach((doc) => {
         lista.push({
@@ -99,7 +93,6 @@ function AuthProvider({ children }) {
           status: doc.data().status,
         });
       });
-      //console.log(lista);
       setAgendamentos(lista);
     });
   }
@@ -114,24 +107,21 @@ function AuthProvider({ children }) {
     return 0;
   }
 
-  async function loadProdutos() {
-    const listRef = collection(db, "produtos");
-    onSnapshot(
-      listRef,
-      where("user", "==", "dPC5ptWI79cvMw5e3fam9KXp5902"),
-      (snapshot) => {
-        let lista = [];
-        snapshot.forEach((doc) => {
-          lista.push({
-            id: doc.id,
-            nomeProduto: doc.data().nomeProduto,
-            valorProduto: doc.data().valorProduto,
-          });
+  async function loadProdutos(uid) {
+    const listRef3 = collection(db, "produtos");
+    const q3 = query(listRef3, where("user", "==", uid));
+    onSnapshot(q3, (snapshot) => {
+      let lista = [];
+      snapshot.forEach((doc) => {
+        lista.push({
+          id: doc.id,
+          nomeProduto: doc.data().nomeProduto,
+          valorProduto: doc.data().valorProduto,
         });
-        lista.sort(ordenar);
-        setProdutos(lista);
-      }
-    );
+      });
+      lista.sort(ordenar);
+      setProdutos(lista);
+    });
   }
 
   async function signin(email, senha) {
@@ -150,11 +140,16 @@ function AuthProvider({ children }) {
         };
         setUser(data);
         storageUser(data);
+
+        loadClientes(uid);
+        loadAgendamentos(uid);
+        loadProdutos(uid);
+
         setLoadingAuth(false);
         navigate("/home");
       })
       .catch((error) => {
-        console.log(error);
+        alert("Usuário e/ou senha incorreto(s).");
         setLoadingAuth(false);
       });
   }
@@ -177,12 +172,17 @@ function AuthProvider({ children }) {
           };
           setUser(data);
           storageUser(data);
+
+          loadClientes(uid);
+          loadAgendamentos(uid);
+          loadProdutos(uid);
+
           setLoadingAuth(false);
           navigate("/home");
         });
       })
       .catch((error) => {
-        console.log(error);
+        alert("Não foi possível realizar o cadastro!");
         setLoadingAuth(false);
       });
   }

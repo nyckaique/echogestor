@@ -24,43 +24,64 @@ export default function Produtos() {
   const [valorProduto, setValorProduto] = useState("");
   const [index, setIndex] = useState("");
   const [filtro, setFiltro] = useState("");
+  const [errorValor, setErrorValor] = useState("");
+
+  const handleNumero = (event) => {
+    const valor = event.target.value.replace(/[^0-9,.]/g, "");
+    setValorProduto(valor);
+    if (!isValidNumber(valor)) {
+      setErrorValor("Insira apenas números");
+    } else {
+      setErrorValor("");
+    }
+  };
+  const isValidNumber = (number) => {
+    number = parseFloat(number);
+    const regex = /^[0-9]+$/;
+    return regex.test(number);
+  };
 
   async function formSubmit() {
     if (nomeProduto !== "" && valorProduto !== "") {
-      if (estaAtualizando) {
-        let novoNomeProduto =
-          nomeProduto.charAt(0).toUpperCase() +
-          nomeProduto.slice(1).toLowerCase();
-        const docRef = doc(db, "produtos", produtos[index].id);
-        await updateDoc(docRef, {
-          nomeProduto: novoNomeProduto,
-          valorProduto: Number(valorProduto),
-        })
-          .then(() => {
-            limpar();
-            alert("Atualizado com sucesso!");
-          })
-          .catch((error) => {
-            limpar();
-            alert("Não foi possível atualizar dados");
-          });
+      setErrorValor("");
+      if (!isValidNumber(valorProduto)) {
+        setErrorValor("Insira apenas números");
       } else {
-        let novoNomeProduto =
-          nomeProduto.charAt(0).toUpperCase() +
-          nomeProduto.slice(1).toLowerCase();
-        await addDoc(collection(db, "produtos"), {
-          nomeProduto: novoNomeProduto,
-          valorProduto: Number(valorProduto),
-          user: user.uid,
-        })
-          .then(() => {
-            limpar();
-            alert("Cadastrado novo produto com sucesso!");
+        if (estaAtualizando) {
+          let novoNomeProduto =
+            nomeProduto.charAt(0).toUpperCase() +
+            nomeProduto.slice(1).toLowerCase();
+          const docRef = doc(db, "produtos", produtos[index].id);
+          await updateDoc(docRef, {
+            nomeProduto: novoNomeProduto,
+            valorProduto: Number(valorProduto.replace(",", ".")),
           })
-          .catch((error) => {
-            limpar();
-            alert("Não foi possível cadastrar o produto no momento");
-          });
+            .then(() => {
+              limpar();
+              alert("Atualizado com sucesso!");
+            })
+            .catch((error) => {
+              limpar();
+              alert("Não foi possível atualizar dados");
+            });
+        } else {
+          let novoNomeProduto =
+            nomeProduto.charAt(0).toUpperCase() +
+            nomeProduto.slice(1).toLowerCase();
+          await addDoc(collection(db, "produtos"), {
+            nomeProduto: novoNomeProduto,
+            valorProduto: Number(valorProduto.replace(",", ".")),
+            user: user.uid,
+          })
+            .then(() => {
+              limpar();
+              alert("Cadastrado novo produto com sucesso!");
+            })
+            .catch((error) => {
+              limpar();
+              alert("Não foi possível cadastrar o produto no momento");
+            });
+        }
       }
     } else {
       alert("Preencha todos os campos!");
@@ -128,10 +149,11 @@ export default function Produtos() {
           <input
             type="text"
             className="inputText"
-            value={valorProduto}
-            onChange={(e) => setValorProduto(e.target.value)}
+            value={`R$ ${valorProduto}`}
+            onChange={handleNumero}
           />
         </div>
+        {errorValor && <p>{errorValor}</p>}
         <div>
           <Button variant="contained" onClick={formSubmit}>
             {estaAtualizando ? "Atualizar Produto" : "Novo Produto"}

@@ -101,3 +101,7 @@ tr:not(:last-child) {
 .containerCliente .tdCenter {
   text-align: center;
 }
+.formCliente p {
+  color: red;
+  font-size: 0.8em;
+}

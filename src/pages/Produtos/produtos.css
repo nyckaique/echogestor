@@ -78,3 +78,8 @@ tr:not(:last-child) {
 .containerProduto .tdCenter {
   text-align: center;
 }
+.formProduto p {
+  color: red;
+  font-size: 0.8em;
+  text-align: center;
+}
