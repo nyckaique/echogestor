@@ -1,0 +1,28 @@
+/* .container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.box {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 2em;
+  border-radius: 1em;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 1.5em;
+  width: 50%;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+}
+.input {
+  width: 80%;
+}
+.titulo {
+  margin-bottom: 0.5em;
+  font-size: 4em;
+  color: #52648b;
+} */

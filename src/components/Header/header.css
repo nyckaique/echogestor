@@ -1,0 +1,52 @@
+.backgroundColorGrey {
+  background-color: #383b47;
+  padding: 0.5em 0;
+  width: 100%;
+}
+.flex {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.Link {
+  font-size: 0.8em;
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  gap: 0.5em;
+  color: #e3e2e9;
+  background-color: #52648b;
+  transition: all ease-in-out 0.3s;
+}
+.Link:hover {
+  color: #52648b;
+  background-color: #83e4ff;
+}
+.LinkText {
+  text-transform: uppercase;
+  line-height: 2;
+  display: inline-block;
+  vertical-align: middle;
+}
+.logoutBtn {
+  width: fit-content;
+  height: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 0.4em;
+  border-radius: 0.5em;
+  border: 0;
+  color: #e3e2e9;
+  background-color: #52648b;
+  display: inline-block;
+  vertical-align: middle;
+  transition: all ease-in-out 0.3s;
+}
+.logoutBtn:hover {
+  color: #52648b;
+  background-color: #83e4ff;
+}

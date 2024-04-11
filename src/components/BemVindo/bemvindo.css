@@ -1,0 +1,16 @@
+.bemvindo {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 0 2em;
+  margin-top: 1em;
+  flex-wrap: wrap;
+}
+.bemvindo img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 1em;
+  aspect-ratio: 1;
+}
