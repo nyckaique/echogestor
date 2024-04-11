@@ -55,6 +55,16 @@ export default function SignIn() {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
+  function acessoTeste() {
+    setEmail("salaodebeleza@email.com");
+    setSenha("123456");
+    toast.success(
+      <div>
+        Seu acesso de teste está pronto e preenchido! <br /> email:
+        salaodebeleza@email.com <br /> senha: 123456
+      </div>
+    );
+  }
   return (
     <div className="container">
       <p className="titulo">
@@ -81,13 +91,24 @@ export default function SignIn() {
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
         />
-        <Button type="submit" variant="contained">
+        <Button
+          type="submit"
+          variant="contained"
+          style={{ backgroundColor: "#52648b" }}
+        >
           {loadingAuth ? "Carregando..." : "Login"}
         </Button>
         <Link to="/cadastro">Criar uma conta</Link>
         <Link onClick={handleOpen} variant="contained">
           Recuperar acesso
         </Link>
+        <Button
+          onClick={acessoTeste}
+          variant="contained"
+          style={{ backgroundColor: "#52648b" }}
+        >
+          Acesso para teste
+        </Button>
       </form>
 
       <div className="box" style={{ visibility: open ? "visible" : "hidden" }}>
@@ -106,7 +127,11 @@ export default function SignIn() {
             helperText={errorEmailRec}
             onChange={(e) => setEmailRec(e.target.value)}
           />
-          <Button variant="contained" onClick={handleRecuperar}>
+          <Button
+            variant="contained"
+            onClick={handleRecuperar}
+            style={{ backgroundColor: "#52648b" }}
+          >
             Enviar
           </Button>
         </div>

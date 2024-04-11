@@ -72,7 +72,11 @@ export default function SignUp() {
           error={!!errorSenha}
           helperText={errorSenha}
         />
-        <Button variant="contained" type="submit">
+        <Button
+          variant="contained"
+          type="submit"
+          style={{ backgroundColor: "#52648b" }}
+        >
           {loadingAuth ? "Carregando..." : "Cadastrar"}
         </Button>
         <Link to="/">Já tem uma conta? Faça login!</Link>
