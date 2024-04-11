@@ -64,6 +64,7 @@ export default function Header(props: Props) {
         variant="h6"
         sx={{ my: 2, color: "#e3e2e9" }}
         className="flex"
+        style={{ fontFamily: "Outfit" }}
       >
         ECHO GESTOR
       </Typography>
@@ -115,6 +116,7 @@ export default function Header(props: Props) {
               color: "#e3e2e9",
               marginLeft: "1em",
             }}
+            style={{ fontFamily: "Outfit" }}
           >
             ECHO GESTOR
           </Typography>
