@@ -4,7 +4,7 @@
 
 ### Acesso
 
-Acesse e experimente em:
+Acesse e experimente em: https://echogestor.netlify.app
 
 ### Sobre
 
@@ -44,7 +44,8 @@ ECHO GESTOR é um site que utiliza a biblioteca/framework React JS. Além disso,
 - Material UI
 - React-toastify
 - ViaCEP API
-  Esse é um dos projetos pessoais mais completos que desenvolvi até o momento e que mostra toda minha habilidade e capacidade como Desenvolvedor Web.
+
+Esse é um dos projetos pessoais mais completos que desenvolvi até o momento e que mostra toda minha habilidade e capacidade como Desenvolvedor Web.
 
 ### Como utilizar
 
