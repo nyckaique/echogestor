@@ -98,20 +98,55 @@ export default function SignIn() {
         >
           {loadingAuth ? "Carregando..." : "Login"}
         </Button>
-        <Link to="/cadastro">Criar uma conta</Link>
-        <Link onClick={handleOpen} variant="contained">
-          Recuperar acesso
-        </Link>
-        <Button
-          onClick={acessoTeste}
-          variant="contained"
-          style={{ backgroundColor: "#52648b" }}
+        <div
+          style={{
+            display: "flex",
+            gap: "1em",
+            width: "100%",
+            justifyContent: "space-evenly",
+          }}
         >
-          Acesso para teste
-        </Button>
+          <Link to="/cadastro">Criar uma conta</Link>
+          <Link onClick={handleOpen} variant="contained">
+            Recuperar acesso
+          </Link>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            gap: "1em",
+            width: "100%",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <Button
+            onClick={acessoTeste}
+            variant="contained"
+            style={{ backgroundColor: "#52648b", width: "fit-content" }}
+          >
+            Acesso de teste
+          </Button>
+
+          <a
+            href="https://github.com/nyckaique/echogestor"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Button variant="contained" style={{ backgroundColor: "#52648b" }}>
+              GitHub
+            </Button>
+          </a>
+        </div>
       </form>
 
-      <div className="box" style={{ visibility: open ? "visible" : "hidden" }}>
+      <div
+        className="box"
+        style={{
+          visibility: open ? "visible" : "hidden",
+          marginBottom: "0.1em",
+        }}
+      >
         <p style={{ textAlign: "justify" }}>
           Informe o e-mail da sua conta para recuperar a senha
         </p>
