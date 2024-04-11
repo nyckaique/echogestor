@@ -27,9 +27,18 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { toast } from "react-toastify";
 
 export default function Agendamentos() {
-  const { user, clientes, agendamentos, produtos } = useContext(AuthContext);
+  const {
+    user,
+    clientes,
+    agendamentos,
+    produtos,
+    loadClientes,
+    loadAgendamentos,
+    loadProdutos,
+  } = useContext(AuthContext);
   const statusOptions = [
     {
       value: true,
@@ -79,6 +88,9 @@ export default function Agendamentos() {
   };
 
   useEffect(() => {
+    loadClientes(user.uid);
+    loadAgendamentos(user.uid);
+    loadProdutos(user.uid);
     let listaClientes = [];
     clientes.forEach((cliente) => {
       listaClientes.push({
@@ -97,14 +109,12 @@ export default function Agendamentos() {
       });
     });
     setProdutosLista(listaProdutos);
-  }, []);
+  }, [clientesLista, produtosLista]);
 
   async function formSubmit() {
     if (selectedCliente !== null && selectedProduto !== null && date !== null) {
-      //console.log(date);
       let novadata = new Date(date);
       novadata = novadata.getTime();
-      //console.log(novadata);
       if (estaAtualizando) {
         const docRef = doc(db, "agendamentos", agendamentos[index].id);
         await updateDoc(docRef, {
@@ -118,12 +128,11 @@ export default function Agendamentos() {
         })
           .then(() => {
             limpar();
-            alert("Atualizado com sucesso");
+            toast.success("Atualizado com sucesso");
           })
           .catch((error) => {
             limpar();
-            alert("Não foi possível atualizar no momento");
-            console.log(error);
+            toast.error("Não foi possível atualizar no momento");
           });
       } else {
         await addDoc(collection(db, "agendamentos"), {
@@ -138,16 +147,15 @@ export default function Agendamentos() {
         })
           .then(() => {
             limpar();
-            alert("Agendado com sucesso");
+            toast.success("Agendado com sucesso");
           })
           .catch((error) => {
             limpar();
-            alert("Não foi possível agendar no momento");
-            console.log(error);
+            toast.error("Não foi possível agendar no momento");
           });
       }
     } else {
-      alert("Preencha todos os campos!");
+      toast.warning("Preencha todos os campos!");
     }
   }
   function limpar() {
@@ -178,10 +186,10 @@ export default function Agendamentos() {
       const docRef = doc(db, "agendamentos", agendamentos[index].id);
       await deleteDoc(docRef)
         .then(() => {
-          alert("Cancelado com sucesso!");
+          toast.success("Cancelado com sucesso!");
         })
         .catch((error) => {
-          alert("Não foi possível cancelar!");
+          toast.error("Não foi possível cancelar!");
         });
     }
   }
@@ -197,10 +205,6 @@ export default function Agendamentos() {
       (produto) => produto.value === agendamentos[index].produto
     );
     let date = dayjs(new Date(agendamentos[index].date));
-    console.log(agendamentos[index]);
-    console.log(date);
-    console.log(cliente);
-    console.log(produto);
     setSelectedCliente(cliente);
     setSelectedProduto(produto);
     setSelectedStatus(
@@ -261,7 +265,6 @@ export default function Agendamentos() {
                     className="Select"
                     onChange={(e) => {
                       setDate(e);
-                      console.log(e);
                     }}
                     value={date}
                     inputFormat="dd.MM.yyyy"
@@ -282,10 +285,18 @@ export default function Agendamentos() {
                 <></>
               )}
               <div className="divBtn">
-                <Button variant="contained" onClick={formSubmit}>
+                <Button
+                  variant="contained"
+                  onClick={formSubmit}
+                  style={{ backgroundColor: "#52648b" }}
+                >
                   {estaAtualizando ? "Atualizar" : "Confirmar"}
                 </Button>
-                <Button variant="contained" onClick={limpar}>
+                <Button
+                  variant="contained"
+                  onClick={limpar}
+                  style={{ backgroundColor: "#52648b" }}
+                >
                   Limpar
                 </Button>
               </div>
@@ -345,7 +356,11 @@ export default function Agendamentos() {
               <Button
                 variant="contained"
                 onClick={limpaFiltros}
-                style={{ width: "fit-content", margin: "auto" }}
+                style={{
+                  width: "fit-content",
+                  margin: "auto",
+                  backgroundColor: "#52648b",
+                }}
               >
                 Limpar filtros
               </Button>

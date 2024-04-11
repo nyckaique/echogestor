@@ -18,6 +18,7 @@ import {
   where,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
@@ -52,7 +53,6 @@ function AuthProvider({ children }) {
     await fetchSignInMethodsForEmail(auth, email)
       .then((signInMethods) => {
         // Verifique se o email fornecido tem um método de login associado a ele
-        console.log(signInMethods);
         if (signInMethods && signInMethods.includes("password")) {
           // Email válido, envie o email de recuperação de senha
 
@@ -71,11 +71,7 @@ function AuthProvider({ children }) {
       })
       .catch((error) => {
         // Ocorreu um erro ao enviar o email de recuperação de senha
-        console.error(
-          "Erro ao enviar email de recuperação de senha:",
-          error.message
-        );
-        setResetPasswordError(error.message);
+        setResetPasswordError("Erro ao enviar email de recuperação de senha");
         setResetPasswordSuccess(null);
       });
   }
@@ -169,7 +165,6 @@ function AuthProvider({ children }) {
     await signInWithEmailAndPassword(auth, email, senha)
       .then(async (value) => {
         let uid = value.user.uid;
-        console.log(uid);
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
         let data = {
@@ -189,7 +184,7 @@ function AuthProvider({ children }) {
         navigate("/home");
       })
       .catch((error) => {
-        alert("Usuário e/ou senha incorreto(s).");
+        toast.error("Usuário e/ou senha incorreto(s).");
         setLoadingAuth(false);
       });
   }
@@ -203,7 +198,7 @@ function AuthProvider({ children }) {
           nome: nome,
           avatarUrl: null,
         }).then(() => {
-          alert("Cadastrado com sucesso!");
+          toast.success("Cadastrado com sucesso!");
           let data = {
             uid: uid,
             nome: nome,
@@ -222,7 +217,7 @@ function AuthProvider({ children }) {
         });
       })
       .catch((error) => {
-        alert("Não foi possível realizar o cadastro!");
+        toast.error("Não foi possível realizar o cadastro!");
         setLoadingAuth(false);
       });
   }
@@ -246,6 +241,9 @@ function AuthProvider({ children }) {
         clientes,
         agendamentos,
         produtos,
+        loadClientes,
+        loadAgendamentos,
+        loadProdutos,
         signin,
         signup,
         logout,

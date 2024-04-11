@@ -3,7 +3,7 @@ import Title from "../../components/Title";
 import StoreIcon from "@mui/icons-material/Store";
 import "./produtos.css";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   updateDoc,
   collection,
@@ -14,11 +14,11 @@ import {
 import { db } from "../../services/firebaseConnection";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/auth";
-
 import ProdutosTable from "../../components/ProdutosTable";
+import { toast } from "react-toastify";
 
 export default function Produtos() {
-  const { user, produtos } = useContext(AuthContext);
+  const { user, produtos, loadProdutos } = useContext(AuthContext);
   const [estaAtualizando, setEstaAtualizando] = useState(false);
   const [nomeProduto, setNomeProduto] = useState("");
   const [valorProduto, setValorProduto] = useState("");
@@ -41,6 +41,10 @@ export default function Produtos() {
     return regex.test(number);
   };
 
+  useEffect(() => {
+    loadProdutos(user.uid);
+  }, []);
+
   async function formSubmit() {
     if (nomeProduto !== "" && valorProduto !== "") {
       setErrorValor("");
@@ -58,11 +62,11 @@ export default function Produtos() {
           })
             .then(() => {
               limpar();
-              alert("Atualizado com sucesso!");
+              toast.success("Atualizado com sucesso!");
             })
             .catch((error) => {
               limpar();
-              alert("Não foi possível atualizar dados");
+              toast.error("Não foi possível atualizar dados");
             });
         } else {
           let novoNomeProduto =
@@ -75,16 +79,16 @@ export default function Produtos() {
           })
             .then(() => {
               limpar();
-              alert("Cadastrado novo produto com sucesso!");
+              toast.success("Cadastrado novo produto com sucesso!");
             })
             .catch((error) => {
               limpar();
-              alert("Não foi possível cadastrar o produto no momento");
+              toast.error("Não foi possível cadastrar o produto no momento");
             });
         }
       }
     } else {
-      alert("Preencha todos os campos!");
+      toast.warning("Preencha todos os campos!");
     }
   }
 
@@ -111,10 +115,10 @@ export default function Produtos() {
       const docRef = doc(db, "produtos", produtos[index].id);
       await deleteDoc(docRef)
         .then(() => {
-          alert("Deletado com sucesso!");
+          toast.success("Deletado com sucesso!");
         })
         .catch((error) => {
-          alert("Não foi possível deletar!");
+          toast.error("Não foi possível deletar!");
         });
     }
   }
@@ -155,10 +159,18 @@ export default function Produtos() {
         </div>
         {errorValor && <p>{errorValor}</p>}
         <div>
-          <Button variant="contained" onClick={formSubmit}>
+          <Button
+            variant="contained"
+            onClick={formSubmit}
+            style={{ backgroundColor: "#52648b" }}
+          >
             {estaAtualizando ? "Atualizar Produto" : "Novo Produto"}
           </Button>
-          <Button variant="contained" onClick={limpar}>
+          <Button
+            variant="contained"
+            onClick={limpar}
+            style={{ backgroundColor: "#52648b" }}
+          >
             Limpar
           </Button>
         </div>

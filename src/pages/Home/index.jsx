@@ -4,17 +4,17 @@ import Header from "../../components/Header";
 import Title from "../../components/Title";
 import HomeIcon from "@mui/icons-material/Home";
 import BemVindo from "../../components/BemVindo";
-import { Navigate } from "react-router-dom";
 import "./home.css";
 
 export default function Home() {
-  const { agendamentos } = useContext(AuthContext);
+  const { user, agendamentos, loadAgendamentos } = useContext(AuthContext);
   const [qtdAgendamentos, setQtdAgendamentos] = useState(0);
   const [agendamentosHoje, setAgendamentosHoje] = useState([]);
   const [faturamento, setFaturamento] = useState(0);
   const [carregou, setCarregou] = useState(false);
 
   useEffect(() => {
+    loadAgendamentos(user.uid);
     function filtroAgendamentosHoje() {
       let hoje = new Date();
       hoje.setHours(0, 0, 0, 0);
@@ -68,6 +68,7 @@ export default function Home() {
                 currency: "BRL",
               })}
             </span>
+            <p style={{ color: "transparent" }}>.</p>
           </div>
         </div>
         <h2 style={{ width: "100%", textAlign: "center" }}>

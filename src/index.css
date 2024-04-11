@@ -1,7 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+
+  /* font-optical-sizing: auto;
+  font-weight: weight;
+  font-style: normal; */
 }
 
 html,
@@ -16,7 +23,7 @@ body,
 body {
   font-family: sans-serif;
   font-size: 1em;
-  background-color: #e3e2e9;
+  background-color: #eeeef1;
   color: #383b47;
 }
 a {
@@ -43,6 +50,6 @@ table {
 branco: e3e2e9
 cinza claro: d4d0d5
 azul claro: 83e4ff
-azul escuro: 52648b
+azul escuro: #52648b
 cinza escuro: 383b47
 */

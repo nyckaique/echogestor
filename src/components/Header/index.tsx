@@ -19,7 +19,6 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import GroupsIcon from "@mui/icons-material/Groups";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import StoreIcon from "@mui/icons-material/Store";
-import BarChartIcon from "@mui/icons-material/BarChart";
 import LogoutIcon from "@mui/icons-material/Logout";
 import "./header.css";
 import echogestorlogo from "../../assets/echogestorlogo.png";
@@ -35,29 +34,14 @@ interface Props {
 }
 
 const drawerWidth = 240;
-const navItems = [
-  "Home",
-  "Perfil",
-  "Clientes",
-  "Agendamentos",
-  "Produtos",
-  "Faturamento",
-];
-const navLinks = [
-  "home",
-  "perfil",
-  "clientes",
-  "agendamentos",
-  "produtos",
-  "faturamento",
-];
+const navItems = ["Home", "Perfil", "Clientes", "Agendamentos", "Produtos"];
+const navLinks = ["home", "perfil", "clientes", "agendamentos", "produtos"];
 const icons = [
   <HomeIcon />,
   <ManageAccountsIcon />,
   <GroupsIcon />,
   <CalendarMonthIcon />,
   <StoreIcon />,
-  <BarChartIcon />,
 ];
 
 export default function Header(props: Props) {

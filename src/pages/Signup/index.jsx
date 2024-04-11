@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "./signup.css";
 import { AuthContext } from "../../contexts/auth";
 import echogestorlogo from "../../assets/echogestorlogo.png";
+import { toast } from "react-toastify";
 
 export default function SignUp() {
   const [nome, setNome] = useState("");
@@ -26,7 +27,7 @@ export default function SignUp() {
         await signup(nome, email, senha);
       }
     } else {
-      alert("Preencha todos os campos!");
+      toast.warning("Preencha todos os campos!");
     }
   }
   const isValidEmail = (email) => {

@@ -10,6 +10,7 @@ import { Button } from "@mui/material";
 import { doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../../services/firebaseConnection";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { toast } from "react-toastify";
 
 export default function Profile() {
   const { user, setUser, storageUser } = useContext(AuthContext);
@@ -32,7 +33,7 @@ export default function Profile() {
         };
         setUser(data);
         storageUser(data);
-        alert("atualizado com sucesso");
+        toast.success("atualizado com sucesso");
       });
     } else if (imagemAvatar !== null && nome !== "") {
       handleFileUpload();
@@ -62,7 +63,7 @@ export default function Profile() {
               };
               setUser(data);
               storageUser(data);
-              alert("atualizado com sucesso");
+              toast.success("atualizado com sucesso");
             });
           });
         }
@@ -80,9 +81,8 @@ export default function Profile() {
       ) {
         setImagemAvatar(image);
         setAvatarUrl(URL.createObjectURL(image));
-        console.log(image);
       } else {
-        alert("Por favor, selecione imagens tipo PNG, JPG ou JPEG");
+        toast.warning("Por favor, selecione imagens tipo PNG, JPG ou JPEG");
       }
     }
   }
@@ -119,7 +119,11 @@ export default function Profile() {
         <label>Email</label>
         <input type="text" value={email} disabled />
 
-        <Button variant="contained" onClick={formSubmit}>
+        <Button
+          variant="contained"
+          onClick={formSubmit}
+          style={{ backgroundColor: "#52648b" }}
+        >
           Salvar
         </Button>
       </form>

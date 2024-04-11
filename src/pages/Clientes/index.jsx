@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Header from "../../components/Header";
 import Title from "../../components/Title";
 import "./clientes.css";
@@ -13,15 +13,19 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  getDocs,
+  where,
+  query,
 } from "firebase/firestore";
 
 import { AuthContext } from "../../contexts/auth";
 import apiCEP from "../../services/cep";
 import SearchIcon from "@mui/icons-material/Search";
 import ClientesTable from "../../components/ClientesTable";
+import { toast } from "react-toastify";
 
 export default function Clientes() {
-  const { user, clientes } = useContext(AuthContext);
+  const { user, clientes, loadClientes } = useContext(AuthContext);
   const [nome, setNome] = useState("");
   const [endereco, setEndereco] = useState("");
   const [bairro, setBairro] = useState("");
@@ -36,6 +40,10 @@ export default function Clientes() {
   const [errorCEP, setErrorCEP] = useState("");
   const [errorNumero, setErrorNumero] = useState("");
   const [errorTelefone, setErrorTelefone] = useState("");
+
+  useEffect(() => {
+    loadClientes(user.uid);
+  }, []);
 
   function handleFiltro(e) {
     const valor = e.target.value
@@ -63,13 +71,24 @@ export default function Clientes() {
       `Confirma deletar o cliente ${clientes[index].nomeCliente}?`
     );
     if (vaiDeletar) {
+      //deleta os agendamentos daquele cliente
+      let docs = await getDocs(
+        query(
+          collection(db, "agendamentos"),
+          where("cliente", "==", clientes[index].id)
+        )
+      );
+      docs.forEach((document) => {
+        deleteDoc(document.ref);
+      });
+      //delete aquele cliente
       const docRef = doc(db, "clientes", clientes[index].id);
       await deleteDoc(docRef)
         .then(() => {
-          alert("Deletado com sucesso!");
+          toast.success("Deletado com sucesso!");
         })
         .catch((error) => {
-          alert("Não foi possível deletar!");
+          toast.error("Não foi possível deletar!");
         });
     }
   }
@@ -77,20 +96,18 @@ export default function Clientes() {
   async function getCEP(e) {
     e.preventDefault();
     if (inputCEP === "") {
-      alert("Por favor, preencha o CEP!");
+      toast.warning("Por favor, preencha o CEP!");
       return;
     }
 
     try {
       const response = await apiCEP.get(`${inputCEP}/json`);
-
-      console.log(response.data);
       setBairro(response.data.bairro);
       setCidade(response.data.localidade);
       setEstado(response.data.uf);
       setEndereco(response.data.logradouro);
     } catch {
-      alert("Deu um erro na busca!");
+      toast.error("Deu um erro na busca!");
       setInputCEP("");
     }
   }
@@ -191,11 +208,11 @@ export default function Clientes() {
             telefone: telefone,
           })
             .then(() => {
-              alert("Atualizado com sucesso!");
+              toast.success("Atualizado com sucesso!");
               limpar();
             })
             .catch((error) => {
-              alert("Não foi possível atualizar dados");
+              toast.error("Não foi possível atualizar dados");
               limpar();
             });
         } else {
@@ -215,18 +232,17 @@ export default function Clientes() {
             user: user.uid,
           })
             .then(() => {
+              toast.success("Cadastrado novo cliente com sucesso!");
               limpar();
-              alert("Cadastrado novo cliente com sucesso!");
             })
             .catch((error) => {
-              alert("Não foi possível realizar o cadastro no momento");
+              toast.error("Não foi possível realizar o cadastro no momento");
               limpar();
-              console.log(error);
             });
         }
       }
     } else {
-      alert("Preencha todos os campos!");
+      toast.warning("Preencha todos os campos!");
     }
   }
   function limpar() {
@@ -347,10 +363,18 @@ export default function Clientes() {
           {errorTelefone && <p>{errorTelefone}</p>}
         </div>
         <div>
-          <Button variant="contained" onClick={formSubmit}>
+          <Button
+            variant="contained"
+            onClick={formSubmit}
+            style={{ backgroundColor: "#52648b" }}
+          >
             {estaAtualizando ? "Atualizar Dados" : "Novo Cliente"}
           </Button>
-          <Button variant="contained" onClick={limpar}>
+          <Button
+            variant="contained"
+            onClick={limpar}
+            style={{ backgroundColor: "#52648b" }}
+          >
             Limpar
           </Button>
         </div>
