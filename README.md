@@ -74,7 +74,7 @@ Por favor, tenha bom senso para usar o ECHO GESTOR.
 
 ### Créditos
 
-Desenvolvido por Nycollas Kaíque.
+Desenvolvido por Nycollas Kaique.
 
 ### Contato
 
