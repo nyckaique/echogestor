@@ -25,6 +25,7 @@ body {
   font-size: 1em;
   background-color: #eeeef1;
   color: #383b47;
+  overflow-x: hidden;
 }
 a {
   text-decoration: none;

@@ -4,7 +4,7 @@
   align-items: center;
   width: 100vw;
   flex-grow: 1;
-  background-color: #d4d0d5;
+  background-color: transparent;
   padding: 0.5em;
 }
 .title h1 {

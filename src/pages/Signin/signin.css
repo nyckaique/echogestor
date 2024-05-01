@@ -7,6 +7,26 @@
   align-items: center;
   gap: 1em;
   padding-top: 1em;
+  background: linear-gradient(
+    135deg,
+    rgba(82, 100, 139, 1) 0%,
+
+    rgba(131, 228, 255, 1) 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient 10s ease-in-out infinite alternate;
+  height: 100vh;
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 .box {
   background-color: white;
@@ -28,12 +48,15 @@
   margin-bottom: 0.5em;
   font-size: 2em;
   font-weight: 700;
-  color: #52648b;
+  color: white;
   text-wrap: nowrap;
   display: flex;
   gap: 1em;
   justify-content: center;
   align-items: center;
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+}
+.titulo span {
 }
 .logo {
   width: 50px;

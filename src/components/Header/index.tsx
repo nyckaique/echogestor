@@ -115,6 +115,7 @@ export default function Header(props: Props) {
               flexGrow: 1,
               color: "#e3e2e9",
               marginLeft: "1em",
+              fontSize: "1.5em",
             }}
             style={{ fontFamily: "Outfit" }}
           >

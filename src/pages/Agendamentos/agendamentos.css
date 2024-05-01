@@ -30,10 +30,12 @@
 .containerAgendamentos table {
   width: fit-content;
   max-width: 100%;
-  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2); */
+  box-shadow: 0px 0px 10px 3px #383b47;
   border-radius: 0.5em;
   border-collapse: collapse;
   margin: auto;
+  margin-top: 1em;
   margin-bottom: 2em;
 }
 .containerAgendamentos table * {
@@ -42,6 +44,9 @@
 .containerAgendamentos thead {
   background-color: #d4d0d5;
   width: 100%;
+}
+.containerAgendamentos tbody {
+  background-color: white;
 }
 
 .containerAgendamentos th,
@@ -88,4 +93,13 @@ tr:not(:last-child) {
   flex-wrap: wrap;
   padding-top: 1em;
   gap: 1em;
+}
+div:has(.formContent) {
+  min-height: 100vh;
+  background: rgb(82, 100, 139);
+  background: linear-gradient(
+    135deg,
+    rgba(82, 100, 139, 1) 0%,
+    rgba(131, 228, 255, 1) 100%
+  );
 }

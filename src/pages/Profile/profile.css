@@ -34,6 +34,15 @@
   margin: auto;
   gap: 0.5em;
 }
+div:has(.formProfile) {
+  min-height: 100vh;
+  background: rgb(82, 100, 139);
+  background: linear-gradient(
+    135deg,
+    rgba(82, 100, 139, 1) 0%,
+    rgba(131, 228, 255, 1) 100%
+  );
+}
 .formProfile input,
 button {
   max-width: 250px;
@@ -43,7 +52,7 @@ button {
   padding: 0.5em;
   border-radius: 0.5em;
   border: none;
-  background-color: #d4d0d5;
+  background-color: white;
   color: #383b47;
 }
 .formProfile input:focus {

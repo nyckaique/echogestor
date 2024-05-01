@@ -8,12 +8,13 @@
   width: fit-content;
   padding: 1em;
   border-radius: 0.5em;
-  box-shadow: 0px 0px 10px 2px #d4d0d5;
+  box-shadow: 0px 0px 10px 3px #383b47;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 1em;
+  background-color: white;
 }
 .agendaCard p {
   font-size: 1.2em;
@@ -39,8 +40,10 @@
   width: fit-content;
   max-width: 100%;
   margin: auto;
+  margin-top: 1em;
   margin-bottom: 2em;
-  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2); */
+  box-shadow: 0px 0px 10px 3px #383b47;
   border-radius: 0.5em;
   overflow: hidden;
   border-collapse: collapse;
@@ -50,6 +53,9 @@
 }
 .agendaTable thead {
   background-color: #d4d0d5;
+}
+.agendaTable tbody {
+  background-color: white;
 }
 
 .agendaTable th,
@@ -63,4 +69,13 @@ tr:not(:last-child) {
 }
 .agendaTable td {
   font-size: 0.8em;
+}
+div:has(.cardContent) {
+  min-height: 100vh;
+  background: rgb(82, 100, 139);
+  background: linear-gradient(
+    135deg,
+    rgba(82, 100, 139, 1) 0%,
+    rgba(131, 228, 255, 1) 100%
+  );
 }
