@@ -11,10 +11,15 @@
 .formAgendamentos {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 350px;
   max-width: 90%;
   margin-bottom: 1em;
   gap: 0.5em;
+  background-color: white;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 0px 0px 10px 3px #383b47;
 }
 .formAgendamentos label {
   display: block;
@@ -70,10 +75,15 @@ tr:not(:last-child) {
 .formFiltros {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 350px;
   max-width: 90%;
   margin-bottom: 1em;
   gap: 0.5em;
+  background-color: white;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 0px 0px 10px 3px #383b47;
 }
 .formFiltros div:not(:last-of-type) {
   display: flex;
@@ -84,6 +94,12 @@ tr:not(:last-child) {
 .formFiltros .inputText {
   margin: 0;
   flex-grow: 1;
+  border: 1px solid #b9b9b9;
+  border-radius: 0.25em;
+}
+.formFiltros .inputText:focus {
+  outline: 2px solid #2684ff;
+  border: 1px solid transparent;
 }
 .formContent {
   display: flex;

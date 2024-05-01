@@ -227,145 +227,127 @@ export default function Agendamentos() {
 
       <div className="formContent">
         <form className="formAgendamentos">
-          <Accordion expanded={accordionOpen} onChange={handleAccordionClick}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1-content"
-              id="panel1-header"
+          <h2 style={{ textAlign: "center" }}>Agendar serviço</h2>
+
+          <div>
+            <label>Cliente</label>
+            <Select
+              className="Select"
+              ref={select}
+              options={clientesLista}
+              value={selectedCliente}
+              onChange={(e) => setSelectedCliente(e)}
+            />
+          </div>
+          <div>
+            <label>Produto/Serviço</label>
+            <Select
+              className="Select"
+              options={produtosLista}
+              value={selectedProduto}
+              onChange={(e) => setSelectedProduto(e)}
+            />
+          </div>
+          <div>
+            <label>Data e horário</label>
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale="pt-br"
             >
-              <h2>Agendar serviço</h2>
-            </AccordionSummary>
-            <AccordionDetails className="formAgendamentos">
-              <div>
-                <label>Cliente</label>
-                <Select
-                  className="Select"
-                  ref={select}
-                  options={clientesLista}
-                  value={selectedCliente}
-                  onChange={(e) => setSelectedCliente(e)}
-                />
-              </div>
-              <div>
-                <label>Produto/Serviço</label>
-                <Select
-                  className="Select"
-                  options={produtosLista}
-                  value={selectedProduto}
-                  onChange={(e) => setSelectedProduto(e)}
-                />
-              </div>
-              <div>
-                <label>Data e horário</label>
-                <LocalizationProvider
-                  dateAdapter={AdapterDayjs}
-                  adapterLocale="pt-br"
-                >
-                  <DateTimePicker
-                    className="Select"
-                    onChange={(e) => {
-                      setDate(e);
-                    }}
-                    value={date}
-                    inputFormat="dd.MM.yyyy"
-                  />
-                </LocalizationProvider>
-              </div>
-              {estaAtualizando ? (
-                <div>
-                  <label>Status</label>
-                  <Select
-                    className="Select"
-                    options={statusOptions}
-                    value={selectedStatus}
-                    onChange={(e) => setSelectedStatus(e)}
-                  />
-                </div>
-              ) : (
-                <></>
-              )}
-              <div className="divBtn">
-                <Button
-                  variant="contained"
-                  onClick={formSubmit}
-                  style={{ backgroundColor: "#52648b" }}
-                >
-                  {estaAtualizando ? "Atualizar" : "Confirmar"}
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={limpar}
-                  style={{ backgroundColor: "#52648b" }}
-                >
-                  Limpar
-                </Button>
-              </div>
-            </AccordionDetails>
-          </Accordion>
+              <DateTimePicker
+                className="Select"
+                onChange={(e) => {
+                  setDate(e);
+                }}
+                value={date}
+                inputFormat="dd.MM.yyyy"
+              />
+            </LocalizationProvider>
+          </div>
+          {estaAtualizando ? (
+            <div>
+              <label>Status</label>
+              <Select
+                className="Select"
+                options={statusOptions}
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e)}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
+          <div className="divBtn">
+            <Button
+              variant="contained"
+              onClick={formSubmit}
+              style={{ backgroundColor: "#52648b" }}
+            >
+              {estaAtualizando ? "Atualizar" : "Confirmar"}
+            </Button>
+            <Button
+              variant="contained"
+              onClick={limpar}
+              style={{ backgroundColor: "#52648b" }}
+            >
+              Limpar
+            </Button>
+          </div>
         </form>
 
         <form className="formFiltros">
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel2-content"
-              id="panel2-header"
-            >
-              <h2>Filtros</h2>
-            </AccordionSummary>
-            <AccordionDetails className="formFiltros">
-              <div>
-                <label>Nome:</label>
-                <input
-                  type="text"
-                  onChange={handleFiltro}
-                  value={filtro}
-                  className="inputText"
-                />
-              </div>
+          <h2 style={{ textAlign: "center" }}>Filtros</h2>
 
-              <div>
-                <label>Data:</label>
-                <LocalizationProvider
-                  dateAdapter={AdapterDayjs}
-                  adapterLocale="pt-br"
-                >
-                  <DatePicker
-                    label="Início"
-                    value={dateRange[0]}
-                    onChange={(e) => setDateRange([e, dateRange[1]])}
-                    //defaultValue={dayjs(new Date())}
-                  />
-                  <DatePicker
-                    label="Fim"
-                    value={dateRange[1]}
-                    onChange={(e) => setDateRange([dateRange[0], e])}
-                    //defaultValue={dayjs(new Date())}
-                  />
-                </LocalizationProvider>
-              </div>
-              <div>
-                <label>Status:</label>
-                <Select
-                  className="Select"
-                  options={filtroStatusOptions}
-                  value={selectedFiltroStatus}
-                  onChange={(e) => setSelectedFiltroStatus(e)}
-                />
-              </div>
-              <Button
-                variant="contained"
-                onClick={limpaFiltros}
-                style={{
-                  width: "fit-content",
-                  margin: "auto",
-                  backgroundColor: "#52648b",
-                }}
-              >
-                Limpar filtros
-              </Button>
-            </AccordionDetails>
-          </Accordion>
+          <div>
+            <label>Nome</label>
+            <input
+              type="text"
+              onChange={handleFiltro}
+              value={filtro}
+              className="inputText"
+            />
+          </div>
+
+          <div>
+            <label>Data</label>
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale="pt-br"
+            >
+              <DatePicker
+                label="Início"
+                value={dateRange[0]}
+                onChange={(e) => setDateRange([e, dateRange[1]])}
+                //defaultValue={dayjs(new Date())}
+              />
+              <DatePicker
+                label="Fim"
+                value={dateRange[1]}
+                onChange={(e) => setDateRange([dateRange[0], e])}
+                //defaultValue={dayjs(new Date())}
+              />
+            </LocalizationProvider>
+          </div>
+          <div className="status">
+            <label>Status</label>
+            <Select
+              className="Select"
+              options={filtroStatusOptions}
+              value={selectedFiltroStatus}
+              onChange={(e) => setSelectedFiltroStatus(e)}
+            />
+          </div>
+          <Button
+            variant="contained"
+            onClick={limpaFiltros}
+            style={{
+              width: "fit-content",
+              margin: "0 auto",
+              backgroundColor: "#52648b",
+            }}
+          >
+            Limpar filtros
+          </Button>
         </form>
       </div>
 
