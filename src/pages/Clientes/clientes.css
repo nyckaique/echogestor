@@ -7,6 +7,7 @@
   align-items: center; */
   margin: 0 auto 1em;
   overflow-x: auto;
+  padding: 0 1em;
 }
 .containerCliente div h2 {
   text-align: center;
@@ -14,7 +15,7 @@
 .containerCliente div input {
   margin: 0;
 }
-div:has(.formCliente) {
+div:has(.tab-container) {
   min-height: 100vh;
   background: rgb(82, 100, 139);
   background: linear-gradient(
@@ -26,7 +27,7 @@ div:has(.formCliente) {
 .formCliente {
   padding: 1em;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   margin: auto;
   gap: 0.5em;
@@ -48,7 +49,6 @@ div:has(.formCliente) {
   border: none;
   background-color: white;
   color: #383b47;
-  margin-right: 0.5em;
   font-weight: 600;
 }
 .inputText::placeholder {
@@ -61,6 +61,10 @@ div:has(.formCliente) {
 }
 .formCliente div {
   margin-right: 1.5em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 .formCliente div:last-child {
   display: flex;
@@ -130,4 +134,36 @@ tr:not(:last-child) {
   background-color: red;
   margin: auto;
   margin-top: 5px;
+}
+.active-content {
+  display: block;
+}
+.content {
+  display: none;
+}
+.tab {
+  display: block;
+  padding: 1em;
+  background-color: white;
+  border-radius: 0.5em;
+  box-shadow: 0px 0px 10px -5px #383b47;
+  transition: all ease-in-out 0.3s;
+}
+.active-tabs {
+  border-bottom: 5px solid #52648b;
+}
+.tabs {
+  background-color: #d4d0d5;
+  border-bottom: 5px solid #d4d0d5;
+}
+.tab-container {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.block-tabs {
+  display: flex;
+  cursor: pointer;
+  gap: 2em;
 }

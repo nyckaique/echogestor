@@ -257,147 +257,173 @@ export default function Clientes() {
     setEstado("");
     setTelefone("");
   }
+  const [toggleState, setToggleState] = useState(1);
+  const toggleTab = (index) => {
+    setToggleState(index);
+  };
+
   return (
     <div>
       <Header />
       <Title name="Clientes">
         <GroupsIcon fontSize="large" />
       </Title>
-      <h2 className="tdCenter">Cadastro de Clientes</h2>
-      <form className="formCliente">
-        <div>
-          <label>Nome</label>
-          <input
-            className="inputText"
-            type="text"
-            value={nome}
-            placeholder="Nome Sobrenome"
-            onChange={(e) => {
-              setNome(e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label>CEP</label>
-          <input
-            className="inputText"
-            type="text"
-            value={inputCEP}
-            placeholder="75500123"
-            onChange={handleCEP}
-          />
 
-          <button onClick={getCEP} className="btn">
-            <SearchIcon fontSize="small" />
-          </button>
-          {errorCEP && <p>{errorCEP}</p>}
-        </div>
-        <div>
-          <label>Endereço</label>
-          <input
-            className="inputText"
-            type="text"
-            value={endereco}
-            placeholder="Rua 1, nº1, Cidade"
-            onChange={(e) => {
-              setEndereco(e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label>Número</label>
-          <input
-            className="inputText"
-            type="text"
-            value={numero}
-            placeholder="123"
-            onChange={handleNumero}
-          />{" "}
-          {errorNumero && <p>{errorNumero}</p>}
-        </div>
-        <div>
-          <label>Bairro</label>
-          <input
-            className="inputText"
-            type="text"
-            value={bairro}
-            placeholder="bairro"
-            onChange={(e) => {
-              setBairro(e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label>Cidade</label>
-          <input
-            className="inputText"
-            type="text"
-            value={cidade}
-            placeholder="cidade"
-            onChange={(e) => {
-              setCidade(e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label>Estado</label>
-          <input
-            className="inputText"
-            type="text"
-            value={estado}
-            placeholder="GO"
-            onChange={(e) => {
-              setEstado(e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label>Telefone</label>
-          <input
-            className="inputText"
-            type="text"
-            value={telefone}
-            placeholder="(99)99999-9999"
-            onChange={handlePhone}
-          />
-          {errorTelefone && <p>{errorTelefone}</p>}
-        </div>
-        <div>
-          <Button
-            variant="contained"
-            onClick={formSubmit}
-            style={{ backgroundColor: "#52648b" }}
+      <div className="tab-container">
+        <div className="block-tabs">
+          <div
+            className={toggleState === 1 ? "active-tabs tab" : "tabs tab"}
+            onClick={() => toggleTab(1)}
           >
-            {estaAtualizando ? "Atualizar Dados" : "Novo Cliente"}
-          </Button>
-          <Button
-            variant="contained"
-            onClick={limpar}
-            style={{ backgroundColor: "#52648b" }}
+            Cadastro de Clientes
+          </div>
+          <div
+            className={toggleState === 2 ? "active-tabs tab" : "tabs tab"}
+            onClick={() => toggleTab(2)}
           >
-            Limpar
-          </Button>
+            Meus Clientes
+          </div>
         </div>
-      </form>
+        <div className="content-tabs">
+          <div className={toggleState === 1 ? "active-content" : "content"}>
+            <h2 className="tdCenter">Cadastro de Clientes</h2>
+            <form className="formCliente">
+              <div>
+                <label>Nome</label>
+                <input
+                  className="inputText"
+                  type="text"
+                  value={nome}
+                  placeholder="Nome Sobrenome"
+                  onChange={(e) => {
+                    setNome(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <label>CEP</label>
+                <button onClick={getCEP} className="btn">
+                  <SearchIcon fontSize="small" />
+                </button>
+                <input
+                  className="inputText"
+                  type="text"
+                  value={inputCEP}
+                  placeholder="75500123"
+                  onChange={handleCEP}
+                />
+              </div>
+              {errorCEP && <p>{errorCEP}</p>}
+              <div>
+                <label>Endereço</label>
+                <input
+                  className="inputText"
+                  type="text"
+                  value={endereco}
+                  placeholder="Rua 1, nº1, Cidade"
+                  onChange={(e) => {
+                    setEndereco(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <label>Número</label>
+                <input
+                  className="inputText"
+                  type="text"
+                  value={numero}
+                  placeholder="123"
+                  onChange={handleNumero}
+                />{" "}
+              </div>
+              {errorNumero && <p>{errorNumero}</p>}
+              <div>
+                <label>Bairro</label>
+                <input
+                  className="inputText"
+                  type="text"
+                  value={bairro}
+                  placeholder="bairro"
+                  onChange={(e) => {
+                    setBairro(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <label>Cidade</label>
+                <input
+                  className="inputText"
+                  type="text"
+                  value={cidade}
+                  placeholder="cidade"
+                  onChange={(e) => {
+                    setCidade(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <label>Estado</label>
+                <input
+                  className="inputText"
+                  type="text"
+                  value={estado}
+                  placeholder="GO"
+                  onChange={(e) => {
+                    setEstado(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <label>Telefone</label>
+                <input
+                  className="inputText"
+                  type="text"
+                  value={telefone}
+                  placeholder="(99)99999-9999"
+                  onChange={handlePhone}
+                />
+              </div>
+              {errorTelefone && <p>{errorTelefone}</p>}
+              <div>
+                <Button
+                  variant="contained"
+                  onClick={formSubmit}
+                  style={{ backgroundColor: "#52648b" }}
+                >
+                  {estaAtualizando ? "Atualizar Dados" : "Novo Cliente"}
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={limpar}
+                  style={{ backgroundColor: "#52648b" }}
+                >
+                  Limpar
+                </Button>
+              </div>
+            </form>
+          </div>
+          <div className={toggleState === 2 ? "active-content" : "content"}>
+            <div className="divBusca">
+              <div>
+                <h2 style={{ textAlign: "center" }}>Meus Clientes</h2>
+                Buscar:{" "}
+                <input
+                  type="text"
+                  onChange={handleFiltro}
+                  value={filtro}
+                  className="inputText"
+                />
+              </div>
+            </div>
 
-      <div className="divBusca">
-        <div>
-          <h2 style={{ textAlign: "center" }}>Meus Clientes</h2>
-          Buscar:{" "}
-          <input
-            type="text"
-            onChange={handleFiltro}
-            value={filtro}
-            className="inputText"
-          />
+            <ClientesTable
+              filtro={filtro}
+              editCliente={editCliente}
+              deleteCliente={deleteCliente}
+            />
+          </div>
         </div>
       </div>
-
-      <ClientesTable
-        filtro={filtro}
-        editCliente={editCliente}
-        deleteCliente={deleteCliente}
-      />
     </div>
   );
 }
