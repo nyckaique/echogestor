@@ -9,6 +9,7 @@
   max-width: 100vw;
   margin: 0 auto 1em;
   overflow-x: auto;
+  padding: 0 1em;
 }
 .containerProduto div input {
   margin: 0;
@@ -94,12 +95,6 @@ tr:not(:last-child) {
   margin: auto;
   margin-top: 5px;
 }
-div:has(.formProduto) {
+div:has(.tab-container) {
   min-height: 100vh;
-  background: rgb(82, 100, 139);
-  background: linear-gradient(
-    135deg,
-    rgba(82, 100, 139, 1) 0%,
-    rgba(131, 228, 255, 1) 100%
-  );
 }

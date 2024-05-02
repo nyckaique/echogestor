@@ -17,12 +17,12 @@
 }
 div:has(.tab-container) {
   min-height: 100vh;
-  background: rgb(82, 100, 139);
+  /* background: rgb(82, 100, 139);
   background: linear-gradient(
     135deg,
     rgba(82, 100, 139, 1) 0%,
     rgba(131, 228, 255, 1) 100%
-  );
+  ); */
 }
 .formCliente {
   padding: 1em;
@@ -147,7 +147,7 @@ tr:not(:last-child) {
   background-color: white;
   border-radius: 0.5em;
   box-shadow: 0px 0px 10px -5px #383b47;
-  transition: all ease-in-out 0.3s;
+  transition: all ease-in-out 0.15s;
 }
 .active-tabs {
   border-bottom: 5px solid #52648b;

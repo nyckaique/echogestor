@@ -1,6 +1,15 @@
 .clienteInfo {
   margin-left: 1em;
 }
+div:has(.clienteInfo) {
+  min-height: 100vh;
+  /* background: rgb(82, 100, 139);
+  background: linear-gradient(
+    135deg,
+    rgba(82, 100, 139, 1) 0%,
+    rgba(131, 228, 255, 1) 100%
+  ); */
+}
 .tableHistorico {
   /* display: flex;
   flex-direction: column;
@@ -17,11 +26,13 @@
 .tableHistorico table {
   width: fit-content;
   max-width: 100%;
-  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2); */
   border-radius: 0.5em;
   border-collapse: collapse;
   margin: auto;
+  margin-top: 1em;
   margin-bottom: 2em;
+  box-shadow: 0px 0px 10px 3px #383b47;
 }
 .tableHistorico table * {
   text-wrap: wrap;
@@ -29,6 +40,9 @@
 .tableHistorico thead {
   background-color: #d4d0d5;
   width: 100%;
+}
+.tableHistorico tbody {
+  background-color: white;
 }
 .tableHistorico th,
 td {

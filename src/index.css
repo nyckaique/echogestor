@@ -24,6 +24,8 @@ body {
   font-family: sans-serif;
   font-size: 1em;
   background-color: #eeeef1;
+  background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+  background-attachment: fixed;
   color: #383b47;
   overflow-x: hidden;
 }

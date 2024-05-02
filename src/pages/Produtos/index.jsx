@@ -130,70 +130,96 @@ export default function Produtos() {
       .replace(/[\u0300-\u036f]/g, "");
     setFiltro(valor);
   }
-
+  const [toggleState, setToggleState] = useState(1);
+  const toggleTab = (index) => {
+    setToggleState(index);
+  };
   return (
     <div>
       <Header />
       <Title name="Produtos">
         <StoreIcon fontSize="large" />
       </Title>
-      <form className="formProduto">
-        <h2>Cadastro do Produto/Serviço</h2>
-        <div>
-          <label>Nome</label>
-          <input
-            type="text"
-            className="inputText"
-            value={nomeProduto}
-            onChange={(e) => setNomeProduto(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Valor</label>
-          <input
-            type="text"
-            className="inputText"
-            value={`R$ ${valorProduto}`}
-            onChange={handleNumero}
-          />
-        </div>
-        {errorValor && <p>{errorValor}</p>}
-        <div>
-          <Button
-            variant="contained"
-            onClick={formSubmit}
-            style={{ backgroundColor: "#52648b" }}
+      <div className="tab-container">
+        <div className="block-tabs">
+          <div
+            className={toggleState === 1 ? "active-tabs tab" : "tabs tab"}
+            onClick={() => toggleTab(1)}
           >
-            {estaAtualizando ? "Atualizar Produto" : "Novo Produto"}
-          </Button>
-          <Button
-            variant="contained"
-            onClick={limpar}
-            style={{ backgroundColor: "#52648b" }}
+            Cadastro de Produtos
+          </div>
+          <div
+            className={toggleState === 2 ? "active-tabs tab" : "tabs tab"}
+            onClick={() => toggleTab(2)}
           >
-            Limpar
-          </Button>
+            Meus Produtos
+          </div>
         </div>
-      </form>
+        <div className="content-tabs">
+          <div className={toggleState === 1 ? "active-content" : "content"}>
+            <form className="formProduto">
+              <h2 style={{ textAlign: "center" }}>
+                Cadastro do Produto/Serviço
+              </h2>
+              <div>
+                <label>Nome</label>
+                <input
+                  type="text"
+                  className="inputText"
+                  value={nomeProduto}
+                  onChange={(e) => setNomeProduto(e.target.value)}
+                />
+              </div>
+              <div>
+                <label>Valor</label>
+                <input
+                  type="text"
+                  className="inputText"
+                  value={`R$ ${valorProduto}`}
+                  onChange={handleNumero}
+                />
+              </div>
+              {errorValor && <p>{errorValor}</p>}
+              <div>
+                <Button
+                  variant="contained"
+                  onClick={formSubmit}
+                  style={{ backgroundColor: "#52648b" }}
+                >
+                  {estaAtualizando ? "Atualizar Produto" : "Novo Produto"}
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={limpar}
+                  style={{ backgroundColor: "#52648b" }}
+                >
+                  Limpar
+                </Button>
+              </div>
+            </form>
+          </div>
+          <div className={toggleState === 2 ? "active-content" : "content"}>
+            <div className="divBusca">
+              <h2>Produtos/Serviços</h2>
+              <div>
+                Buscar:{" "}
+                <input
+                  type="text"
+                  onChange={handleFiltro}
+                  value={filtro}
+                  className="inputText"
+                />
+              </div>
+            </div>
 
-      <div className="divBusca">
-        <h2>Produtos/Serviços</h2>
-        <div>
-          Buscar:{" "}
-          <input
-            type="text"
-            onChange={handleFiltro}
-            value={filtro}
-            className="inputText"
-          />
+            <ProdutosTable
+              filtro={filtro}
+              editProduto={editProduto}
+              deleteProduto={deleteProduto}
+            />
+          </div>
         </div>
       </div>
-
-      <ProdutosTable
-        filtro={filtro}
-        editProduto={editProduto}
-        deleteProduto={deleteProduto}
-      />
     </div>
   );
 }

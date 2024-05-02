@@ -10,11 +10,14 @@
   background: linear-gradient(
     135deg,
     rgba(82, 100, 139, 1) 0%,
-
-    rgba(131, 228, 255, 1) 100%
+    rgba(131, 228, 255, 1) 30%,
+    #accbee 70%,
+    #e7f0fd 100%
   );
+  /* background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%); */
   background-size: 400% 400%;
-  animation: gradient 10s ease-in-out infinite alternate;
+  backdrop-filter: blur(0.3em);
+  animation: gradient 5s ease-in-out infinite;
   height: 100vh;
 }
 @keyframes gradient {

@@ -7,6 +7,7 @@
   align-items: center; */
   margin: 0 auto 1em;
   overflow-x: auto;
+  padding: 0 1em;
 }
 .formAgendamentos {
   display: flex;
@@ -112,10 +113,10 @@ tr:not(:last-child) {
 }
 div:has(.formContent) {
   min-height: 100vh;
-  background: rgb(82, 100, 139);
+  /* background: rgb(82, 100, 139);
   background: linear-gradient(
     135deg,
     rgba(82, 100, 139, 1) 0%,
     rgba(131, 228, 255, 1) 100%
-  );
+  ); */
 }
